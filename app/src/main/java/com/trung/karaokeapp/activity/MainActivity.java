@@ -1,4 +1,4 @@
-package com.trung.karaokeapp.controller;
+package com.trung.karaokeapp.activity;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.fragment.FeedFragment;
@@ -41,13 +40,12 @@ implements HomeFragment.OnFragmentInteractionListener,
         fragmentManager = getSupportFragmentManager();
         fragment = new HomeFragment();
 
-        //init home fragment for default
+        //init home fragment for first load application
         fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
-
-        subcribeEvent();
+        subcribeBottomNavEvent();
     }
 
-    private void subcribeEvent() {
+    private void subcribeBottomNavEvent() {
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

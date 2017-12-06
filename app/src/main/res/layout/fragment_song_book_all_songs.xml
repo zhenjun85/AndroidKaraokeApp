@@ -1,0 +1,75 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.trung.karaokeapp.fragment.AllSongsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="10dp">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:clickable="true"
+                        android:background="@drawable/btn_custom_background_ripple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:focusable="true">
+                        <TextView
+                            android:textAlignment="center"
+                            android:layout_gravity="center_vertical"
+                            android:drawableStart="@drawable/ic_swap_vert_black_24dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+
+                            android:textSize="20sp"
+                            android:text="Sort"
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:clickable="true"
+                        android:background="@drawable/btn_custom_background_ripple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:focusable="true">
+                        <TextView
+                            android:textAlignment="center"
+                            android:layout_gravity="center_vertical"
+                            android:drawableStart="@drawable/ic_filter_list_black_24dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+
+                            android:textSize="20sp"
+                            android:text="Filter"
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_all_songs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>

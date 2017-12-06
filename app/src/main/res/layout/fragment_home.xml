@@ -7,28 +7,26 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/my_toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            android:theme="@style/AppTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/my_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+        </android.support.design.widget.AppBarLayout>
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="?attr/actionBarSize"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="142dp">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:id="@+id/content"
@@ -46,40 +44,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
 
-                <RelativeLayout
-                    android:id="@+id/group_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="false"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:text="New Songs"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp" />
-
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:background="@android:color/transparent"
-                        android:text="MORE"
-                        android:textColor="#FFBBBBBB"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
+                <include layout="@layout/item_topic_label_newsongs"/>
 
                 <HorizontalScrollView
+                    android:background="#efeef1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="none">
@@ -88,7 +56,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:padding="8dp">
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp">
 
                         <include layout="@layout/item_rv_newsong"></include>
 
@@ -100,38 +69,7 @@
                     </LinearLayout>
                 </HorizontalScrollView>
 
-                <RelativeLayout
-                    android:id="@+id/group_label2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="8dp">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="false"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:text="Feature Songs"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp" />
-
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:background="@android:color/transparent"
-                        android:text="MORE"
-                        android:textColor="#FFBBBBBB"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
+                <include layout="@layout/item_topic_label_featuresongs"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -147,39 +85,7 @@
                     <include layout="@layout/item_rv_feature_songs" />
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/group_label2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="8dp">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="false"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:text="Feature Shared Records"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp" />
-
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:background="@android:color/transparent"
-                        android:text="MORE"
-                        android:textColor="#FFBBBBBB"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
-
+                <include layout="@layout/item_topic_label_popularsharerecords"/>
                 <GridLayout
                     android:id="@+id/grid"
                     android:layout_width="match_parent"
@@ -196,7 +102,7 @@
                         <ImageView
                             android:id="@+id/imageView7"
                             android:layout_width="0dp"
-                            android:layout_height="170dp"
+                            android:layout_height="168dp"
                             android:src="@color/colorPrimaryDark"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -395,7 +301,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </FrameLayout>

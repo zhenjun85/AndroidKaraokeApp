@@ -1,6 +1,5 @@
-package com.trung.karaokeapp.controller;
+package com.trung.karaokeapp.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.trung.karaokeapp.controller;
+package com.trung.karaokeapp.activity;
 
 import android.Manifest;
 import android.content.Intent;

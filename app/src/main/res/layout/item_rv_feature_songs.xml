@@ -10,7 +10,7 @@
         android:id="@+id/imageView6"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/common_google_signin_btn_icon_dark_focused"
+        android:src="@drawable/image1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,16 +53,22 @@
         app:layout_constraintStart_toEndOf="@+id/imageView6"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+    <LinearLayout
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_shape"
-        android:text="Sing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_custom_background_ripple"
+            android:text="Sing"
+            />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
