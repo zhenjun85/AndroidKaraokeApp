@@ -1,6 +1,7 @@
 package com.trung.karaokeapp.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.activity.SongDetailActivity;
 
 
 public class HomeFragment extends Fragment {
@@ -42,6 +45,16 @@ public class HomeFragment extends Fragment {
 
         Toolbar toolbar = view.findViewById(R.id.my_toolbar);
         setUpToolBar(toolbar);
+
+        //Button Sing
+        Button button = view.findViewById(R.id.btn_sing_homepage);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), SongDetailActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

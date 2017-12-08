@@ -108,6 +108,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp">
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/playlist_open"
                         android:clickable="true"
                         android:background="@drawable/btn_custom_background_ripple"
                         android:layout_weight="1"
@@ -138,6 +139,7 @@
 
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/local_songs_open"
                         android:clickable="true"
                         android:background="@drawable/btn_custom_background_ripple"
                         android:layout_weight="1"
@@ -168,6 +170,7 @@
 
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/duet_open"
                         android:clickable="true"
                         android:background="@drawable/btn_custom_background_ripple"
                         android:layout_weight="1"
@@ -198,6 +201,7 @@
 
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/photo_open"
                         android:clickable="true"
                         android:background="@drawable/btn_custom_background_ripple"
                         android:layout_weight="1"

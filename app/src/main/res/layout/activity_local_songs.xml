@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gw.swipeback.SwipeBackLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeBackLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:directionMode="left"
+    app:isSwipeFromEdge="true"
+    app:maskAlpha="125"
+    app:swipeBackFactor="0.5">
+
+    <LinearLayout
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <TextView
+                    android:id="@+id/tv_songname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="One Day"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_time_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:text="00:17"
+                    app:layout_constraintStart_toStartOf="@+id/tv_songname"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_songname" />
+
+                <TextView
+                    android:id="@+id/tv_size_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="2MB"
+                    app:layout_constraintStart_toEndOf="@+id/tv_time_duration"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_songname" />
+
+                <TextView
+                    android:id="@+id/tv_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="0dp"
+                    android:text="79 score"
+                    app:layout_constraintStart_toEndOf="@+id/tv_size_file"
+                    app:layout_constraintTop_toTopOf="@+id/tv_size_file" />
+
+                <LinearLayout
+                    android:background="@drawable/btn_post_red"
+                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <TextView
+                        android:background="@drawable/btn_custom_background_ripple"
+                        android:textColor="@android:color/white"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:text="Post"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</com.gw.swipeback.SwipeBackLayout>

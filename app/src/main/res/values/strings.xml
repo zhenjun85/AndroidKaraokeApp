@@ -16,4 +16,6 @@
     <string name="text_see_more">See more</string>
     <string name="label_group_feature_songs">Feature Songs</string>
     <string name="label_group_p_sharerecords">Popular shared records</string>
+    <string name="txt_hint_email">Email</string>
+    <string name="txt_hint_password">Password</string>
 </resources>

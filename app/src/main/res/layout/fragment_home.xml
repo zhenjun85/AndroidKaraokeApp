@@ -76,7 +76,78 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <include layout="@layout/item_rv_feature_songs" />
+                    <android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:padding="8dp"
+                        xmlns:android="http://schemas.android.com/apk/res/android">
+
+                        <ImageView
+                            android:id="@+id/imageView6"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/image1"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:text="What makes you beautiful"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView6"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:text="One Direction"
+                            android:textColor="#FFB7B7B7"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView6"
+                            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:text="100 views"
+                            android:textColor="@android:color/holo_blue_light"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView6"
+                            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+                        <LinearLayout
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/button_shape"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+                            <Button
+                                android:id="@+id/btn_sing_homepage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:background="@drawable/btn_custom_background_ripple"
+                                android:text="Sing"/>
+                        </LinearLayout>
+                    </android.support.constraint.ConstraintLayout>
 
                     <include layout="@layout/item_rv_feature_songs" />
 

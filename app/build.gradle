@@ -36,5 +36,6 @@ dependencies {
 
     //Library Outdoor
     implementation 'com.gongwen:swipeback:1.0.2'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 
 }
