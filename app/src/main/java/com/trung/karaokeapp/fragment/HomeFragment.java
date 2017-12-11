@@ -47,14 +47,14 @@ public class HomeFragment extends Fragment {
         setUpToolBar(toolbar);
 
         //Button Sing
-        Button button = view.findViewById(R.id.btn_sing_homepage);
+        /*Button button = view.findViewById(R.id.btn_sing_homepage);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), SongDetailActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         return view;
     }

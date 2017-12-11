@@ -1,39 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.trung.karaokeapp.fragment.NotificationFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <android.support.constraint.ConstraintLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="wrap_content">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="?attr/actionBarSize"/>
+    </android.support.design.widget.AppBarLayout>
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-
+            <!--//Label group-->
             <RelativeLayout
                 android:background="#efeef1"
                 android:layout_width="match_parent"
@@ -51,7 +40,7 @@
 
                 <TextView
                     android:clickable="true"
-                    android:background="@drawable/btn_custom_background_ripple"
+                    android:background="@drawable/btn_ripple"
                     android:drawableLeft="@drawable/ic_expand_more_black_18dp"
                     android:padding="8dp"
                     android:textSize="18sp"
@@ -61,10 +50,9 @@
                     android:layout_height="wrap_content" />
             </RelativeLayout>
 
-            <include layout="@layout/item_rv_notification"></include>
-
-            <include layout="@layout/item_rv_notification"></include>
-
+            <include layout="@layout/item_rv_notification"/>
+            <include layout="@layout/item_rv_notification"/>
         </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
-</FrameLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

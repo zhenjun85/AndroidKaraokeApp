@@ -1,6 +1,7 @@
 package com.trung.karaokeapp.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ public class FeedFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_feed);
         toolbar.setTitle(R.string.titile_feed);
+        toolbar.setTitleTextColor(Color.WHITE);
 
         return view;
     }

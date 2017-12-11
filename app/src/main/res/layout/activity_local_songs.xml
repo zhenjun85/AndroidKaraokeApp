@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:directionMode="left"
-    app:isSwipeFromEdge="true"
-    app:maskAlpha="125"
+    app:isSwipeFromEdge="false"
+    app:maskAlpha="150"
     app:swipeBackFactor="0.5">
 
     <LinearLayout
@@ -69,7 +69,7 @@
                     app:layout_constraintTop_toTopOf="@+id/tv_size_file" />
 
                 <LinearLayout
-                    android:background="@drawable/btn_post_red"
+                    android:background="@drawable/btn_post_green"
                     android:clickable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
                     <TextView
-                        android:background="@drawable/btn_custom_background_ripple"
+                        android:background="@drawable/btn_ripple"
                         android:textColor="@android:color/white"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"

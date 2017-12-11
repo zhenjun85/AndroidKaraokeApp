@@ -15,6 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Test Activity -->
+        <activity android:name=".activity.TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- App Activities -->
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,10 +36,28 @@
         <activity
             android:name=".activity.LocalSongsActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme2"></activity>
-        <activity android:name=".activity.SongDetailActivity"
-            android:theme="@style/AppTheme2"
-            android:parentActivityName=".activity.MainActivity"></activity>
+            android:theme="@style/AppTheme2" />
+        <activity
+            android:name=".activity.SongDetailActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme2" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.ALL_APPS" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SignUpActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.PlaylistActivity" />
+        <activity android:name=".activity.DuetManageActivity" />
+        <activity android:name=".activity.PhotoManageActivity" />
+        <activity android:name=".activity.PlaylistDetailActivity" />
+        <activity android:name=".activity.FriendActivity"></activity>
     </application>
 
 </manifest>

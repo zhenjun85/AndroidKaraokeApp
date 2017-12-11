@@ -28,7 +28,6 @@ import java.util.List;
 public class SongBookFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
     public SongBookFragment() {
         // Required empty public constructor
     }
@@ -39,7 +38,6 @@ public class SongBookFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_song_book, container, false);
 
-
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         setUpToolBar(toolbar);
 
@@ -47,8 +45,6 @@ public class SongBookFragment extends Fragment {
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-
-        //Toolbar
 
         return view;
     }
@@ -62,10 +58,10 @@ public class SongBookFragment extends Fragment {
 
         final SearchView searchView = (SearchView) menu.findItem(R.id.mn_search).getActionView();
 
-        int searchImgId = android.support.v7.appcompat.R.id.search_button; // I used the explicit layout ID of searchview's ImageView
+        int searchImgId = android.support.v7.appcompat.R.id.search_button;
         ImageView v = (ImageView) searchView.findViewById(searchImgId);
         v.setImageResource(R.drawable.ic_search_black_24dp);
-        searchView.setQueryHint("hihi");
+        searchView.setQueryHint("Find the song");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -82,9 +78,9 @@ public class SongBookFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new RecommendedSongFragment(), "Recommended");
-        adapter.addFragment(new AllSongsFragment(), "All songs");
-        adapter.addFragment(new RecentFragment(), "Recent");
+        adapter.addFragment(new RecommendedSongFragment(), getString(R.string.title_recommend));
+        adapter.addFragment(new AllSongsFragment(), getString(R.string.titile_all_songs));
+        adapter.addFragment(new RecentFragment(), getString(R.string.titile_recent));
         viewPager.setAdapter(adapter);
     }
 

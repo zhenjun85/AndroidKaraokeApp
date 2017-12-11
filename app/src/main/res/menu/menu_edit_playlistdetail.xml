@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mn_move_up_pldt"
+        android:title="Move Up" />
+    <item
+        android:id="@+id/mn_move_down_pldt"
+        android:title="Move Down" />
+    <item
+        android:id="@+id/mn_delete_pldt"
+        android:title="Delete" />
+</menu>

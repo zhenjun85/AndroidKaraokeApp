@@ -2,6 +2,7 @@ package com.trung.karaokeapp.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -13,10 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.activity.DuetManageActivity;
+import com.trung.karaokeapp.activity.FriendActivity;
 import com.trung.karaokeapp.activity.LocalSongsActivity;
+import com.trung.karaokeapp.activity.PhotoManageActivity;
+import com.trung.karaokeapp.activity.PlaylistActivity;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -32,21 +41,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        //toolbar
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_profile);
 
-        setUpAppBar(view);
-
-        ConstraintLayout playlist = view.findViewById(R.id.playlist_open);
-        ConstraintLayout local_song = view.findViewById(R.id.local_songs_open);
-        ConstraintLayout duet = view.findViewById(R.id.duet_open);
-        ConstraintLayout photo = view.findViewById(R.id.photo_open);
-
+        //button
+        RelativeLayout playlist = view.findViewById(R.id.btn_playlist_open);
+        RelativeLayout local_song = view.findViewById(R.id.btn_local_song_open);
+        RelativeLayout duet = view.findViewById(R.id.btn_duet_open);
+        RelativeLayout photo = view.findViewById(R.id.btn_photo_open);
+        RelativeLayout friend = view.findViewById(R.id.btn_friend_open);
         playlist.setOnClickListener(this);
         local_song.setOnClickListener(this);
         duet.setOnClickListener(this);
         photo.setOnClickListener(this);
+        friend.setOnClickListener(this);
 
+        //grid view
+        GridView gridView = view.findViewById(R.id.gv_shared_songs);
+        MyAdapter myAdapter = new MyAdapter(getContext());
+        gridView.setAdapter(myAdapter);
+
+        gridView.setMinimumHeight(1000);
         return view;
     }
 
@@ -54,51 +70,62 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         Intent intent= null;
         switch (view.getId()) {
-            case R.id.playlist_open:
-
+            case R.id.btn_playlist_open:
+                intent = new Intent(getContext(), PlaylistActivity.class);
                 break;
-            case R.id.local_songs_open:
+            case R.id.btn_local_song_open:
                 intent = new Intent(getContext(), LocalSongsActivity.class);
-
-                Log.d("___tr", "1");
                 break;
-            case R.id.duet_open:
-
+            case R.id.btn_duet_open:
+                intent = new Intent(getContext(), DuetManageActivity.class);
                 break;
-            case R.id.photo_open:
-
+            case R.id.btn_photo_open:
+                intent = new Intent(getContext(), PhotoManageActivity.class);
                 break;
+            case R.id.btn_friend_open:
+                intent = new Intent(getContext(), FriendActivity.class);
+                break;
+            default:break;
         }
         if (intent != null) {
             startActivity(intent);
         }
     }
 
-    private void setUpAppBar(View view) {
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapse_toolbar);
-        AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout_profile);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
+    //Adapter for grid view
+    public class MyAdapter extends BaseAdapter {
+        private Context context;
 
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle("Profile");
-                    isShow = true;
-                } else if(isShow) {
-                    collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
-                    isShow = false;
-                }
+        MyAdapter(Context c) {
+            this.context = c;
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                LayoutInflater inflater = getLayoutInflater();
+                view = inflater.inflate(R.layout.item_rv_shared_song_profile, viewGroup, false);
             }
-        });
+
+            return view;
+        }
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

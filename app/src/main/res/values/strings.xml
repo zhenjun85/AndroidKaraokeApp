@@ -18,4 +18,10 @@
     <string name="label_group_p_sharerecords">Popular shared records</string>
     <string name="txt_hint_email">Email</string>
     <string name="txt_hint_password">Password</string>
+    <string name="title_recommend">Recommend</string>
+    <string name="titile_all_songs">All songs</string>
+    <string name="titile_recent">Recent</string>
+    <string name="title_playlist">Playlist</string>
+    <string name="title_playlist_detail">Playlist detail</string>
+    <string name="titile_photo">Photo</string>
 </resources>
