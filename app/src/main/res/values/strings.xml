@@ -24,4 +24,5 @@
     <string name="title_playlist">Playlist</string>
     <string name="title_playlist_detail">Playlist detail</string>
     <string name="titile_photo">Photo</string>
+    <string name="text_register">Register</string>
 </resources>

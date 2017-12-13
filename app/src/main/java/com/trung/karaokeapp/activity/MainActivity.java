@@ -18,7 +18,7 @@ import com.trung.karaokeapp.fragment.HomeFragment;
 import com.trung.karaokeapp.fragment.NotificationFragment;
 import com.trung.karaokeapp.fragment.ProfileFragment;
 import com.trung.karaokeapp.fragment.SongBookFragment;
-import com.trung.karaokeapp.model.MainActivityViewModel;
+import com.trung.karaokeapp.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity
 implements HomeFragment.OnFragmentInteractionListener,

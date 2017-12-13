@@ -4,18 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.util.Patterns;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.TokenManager;
@@ -36,14 +25,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+public class RegisterActivity extends AppCompatActivity {
 
-public class LoginActivity extends AppCompatActivity {
-
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "RegisterActivity";
     private final String PREFS = "prefs";
 
-    @BindView(R.id.til_email)
-    TextInputLayout til_email;
+    @BindView(R.id.til_name) TextInputLayout til_name;
+    @BindView(R.id.til_email) TextInputLayout til_email;
     @BindView(R.id.til_password) TextInputLayout til_password;
 
     ApiService service;
@@ -52,24 +40,26 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
         service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences(PREFS, MODE_PRIVATE));
-
     }
 
-    @OnClick(R.id.btn_login)
-    void login() {
+    @OnClick(R.id.btn_register)
+    void register() {
+        String name = til_name.getEditText().getText().toString();
         String email = til_email.getEditText().getText().toString();
         String password = til_password.getEditText().getText().toString();
 
+        til_name.setError(null);
         til_email.setError(null);
         til_password.setError(null);
 
-        call = service.login(email, password);
+        call = service.register(name, email, password);
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -77,17 +67,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     tokenManager.saveToken(response.body());
-                    Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT ).show();
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     finish();
                 }else {
-                    if (response.code() == 422) {
-                        handleErrors(response.errorBody());
-                    }
-                    if (response.code() == 401) {
-                        ApiError apiError = Utils.converErrors(response.errorBody());
-                        Toast.makeText(getApplicationContext(), apiError.getMessage(), Toast.LENGTH_SHORT ).show();
-                    }
+                    handleErrors(response.errorBody());
                 }
             }
 
@@ -96,13 +79,15 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, t.getMessage());
             }
         });
-
     }
 
     private void handleErrors(ResponseBody response) {
         ApiError apiError = Utils.converErrors(response);
 
         for(Map.Entry<String, List<String>> error : apiError.getErrors().entrySet()){
+            if(error.getKey().equals("name")){
+                til_name.setError(error.getValue().get(0));
+            }
             if(error.getKey().equals("email")){
                 til_email.setError(error.getValue().get(0));
             }
@@ -112,9 +97,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.link_to_register)
-    void goToRegister(){
-        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+    @OnClick(R.id.link_to_login)
+    void goToLogin() {
+        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         finish();
     }
 

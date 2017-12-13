@@ -1,9 +1,6 @@
-package com.trung.karaokeapp.model;
+package com.trung.karaokeapp.viewmodel;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.OnLifecycleEvent;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 
 import com.trung.karaokeapp.fragment.FeedFragment;
 import com.trung.karaokeapp.fragment.HomeFragment;

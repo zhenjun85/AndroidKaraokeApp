@@ -14,45 +14,41 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".MyApplication"
         android:theme="@style/AppTheme">
 
         <!-- Test Activity -->
         <activity android:name=".activity.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- Login -->
+        <activity android:name=".activity.LoginActivity"  android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Sign up -->
+        <activity android:name=".activity.RegisterActivity" android:theme="@style/AppTheme">
+
         </activity>
 
         <!-- App Activities -->
         <activity android:name=".activity.MainActivity">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
-        <activity
-            android:name=".activity.LocalSongsActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme2" />
-        <activity
-            android:name=".activity.SongDetailActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme2" />
-        <activity
-            android:name=".activity.LoginActivity"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activity.SignUpActivity"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.LocalSongsActivity" android:parentActivityName=".activity.MainActivity" android:theme="@style/AppTheme2" />
+        <activity android:name=".activity.SongDetailActivity" android:parentActivityName=".activity.MainActivity" android:theme="@style/AppTheme2" />
         <activity android:name=".activity.PlaylistActivity" />
         <activity android:name=".activity.DuetManageActivity" />
         <activity android:name=".activity.PhotoManageActivity" />

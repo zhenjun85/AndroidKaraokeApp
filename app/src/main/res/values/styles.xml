@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">#282525</item>
+        <item name="colorControlActivated">#a1a0a0</item>
+        <item name="colorControlHighlight">#50a0ae</item>
 
     </style>
     <style name="AppTheme2" parent="AppTheme">
