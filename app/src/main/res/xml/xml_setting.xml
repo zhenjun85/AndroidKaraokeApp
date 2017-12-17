@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:layout="@layout/preferences_category"
+        android:title="Theme">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/list_theme"
+            android:entryValues="@array/list_theme_values"
+            android:key="key_theme"
+            android:summary="Select theme what you want"
+            android:title="Choose theme" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/preferences_category"
+        android:title="Change Server">
+        <EditTextPreference
+            android:key="key_base_ip"
+            android:title="Change IP address" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/preferences_category"
+        android:title="About">
+        <Preference
+            android:title="Privacy Policy" />
+        <Preference
+            android:title="Version" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/preferences_category"
+        android:title="User">
+        <Preference
+            android:key="key_logout"
+            android:title="Logout" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,10 +1,14 @@
 package com.trung.karaokeapp.network;
 
 import com.trung.karaokeapp.entities.AccessToken;
+import com.trung.karaokeapp.entities.KaraokeSong;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -21,7 +25,14 @@ public interface ApiService {
     @FormUrlEncoded
     Call<AccessToken> login(@Field("email") String email, @Field("password") String password);
 
+    @POST("logout")
+    @FormUrlEncoded
+    Call<String> logout(@Field("abc") String abc);
+
     @POST("refresh")
     @FormUrlEncoded
     Call<AccessToken> refresh(@Field("refresh_token") String refreshToken);
+
+    @GET("all-songs")
+    Call<List<KaraokeSong>> getAllSongs();
 }

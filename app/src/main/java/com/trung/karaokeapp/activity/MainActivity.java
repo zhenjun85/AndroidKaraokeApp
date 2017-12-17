@@ -1,6 +1,8 @@
 package com.trung.karaokeapp.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,12 +15,16 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.TokenManager;
 import com.trung.karaokeapp.fragment.FeedFragment;
 import com.trung.karaokeapp.fragment.HomeFragment;
 import com.trung.karaokeapp.fragment.NotificationFragment;
 import com.trung.karaokeapp.fragment.ProfileFragment;
 import com.trung.karaokeapp.fragment.SongBookFragment;
 import com.trung.karaokeapp.viewmodel.MainActivityViewModel;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
 implements HomeFragment.OnFragmentInteractionListener,
@@ -27,20 +33,28 @@ implements HomeFragment.OnFragmentInteractionListener,
         NotificationFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener
 {
+    @BindView(R.id.navigation) BottomNavigationView bottomNavigation;
 
-    private BottomNavigationView bottomNavigation;
     private MainActivityViewModel activityViewModel;
     private FragmentManager fragmentManager;
+    private TokenManager tokenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
         //prepare
-        bottomNavigation = findViewById(R.id.navigation);
         fragmentManager = getSupportFragmentManager();
         activityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if (tokenManager.getToken().getAccessToken() == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+
 
         //assign HomeFragment for first load application
         activityViewModel.homeFragment = new HomeFragment();
@@ -98,6 +112,14 @@ implements HomeFragment.OnFragmentInteractionListener,
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (tokenManager.getToken().getAccessToken() == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

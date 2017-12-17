@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="list_theme">
+        <item>Theme Dark Pink</item>
+        <item>Theme Blue</item>
+    </string-array>
+    <string-array name="list_theme_values">
+        <item>theme1</item>
+        <item>theme2</item>
+    </string-array>
+    <string-array name="action_record_array">
+        <item>Post timeline</item>
+        <item>Save local</item>
+        <item>Cancel</item>
+    </string-array>
+</resources>

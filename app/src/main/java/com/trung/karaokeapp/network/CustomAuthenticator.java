@@ -42,7 +42,7 @@ public class CustomAuthenticator implements Authenticator {
         AccessToken token = tokenManager.getToken();
 
         ApiService service = RetrofitBuilder.createService(ApiService.class);
-        Call<AccessToken> call = service.refresh(token.getRefreshToken() + "a");
+        Call<AccessToken> call = service.refresh(token.getRefreshToken());
         retrofit2.Response<AccessToken> res = call.execute();
 
         if(res.isSuccessful()){

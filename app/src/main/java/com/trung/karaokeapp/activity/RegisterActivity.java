@@ -47,6 +47,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences(PREFS, MODE_PRIVATE));
+
+        if (tokenManager.getToken().getAccessToken() != null) {
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     @OnClick(R.id.btn_register)

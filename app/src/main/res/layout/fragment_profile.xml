@@ -210,7 +210,7 @@
                     android:textStyle="bold"
                     android:padding="8dp" />
 
-                <com.trung.karaokeapp.test.MyGridView
+                <com.trung.karaokeapp.appclass.MyGridView
                     android:id="@+id/gv_shared_songs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

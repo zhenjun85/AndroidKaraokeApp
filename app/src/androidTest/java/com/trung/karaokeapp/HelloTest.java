@@ -33,7 +33,7 @@ public class HelloTest {
     @Test
     public void test01() {
         Context context = InstrumentationRegistry.getContext();
-
+        Log.d("tetst1", "---------------------");
     }
 
 }

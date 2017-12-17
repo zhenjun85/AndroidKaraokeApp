@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gw.swipeback.SwipeBackLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.gw.swipeback.SwipeBackLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeBackLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:directionMode="left"
-    app:isSwipeFromEdge="true"
+    app:isSwipeFromEdge="false"
     app:maskAlpha="125"
     app:swipeBackFactor="0.5">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -23,7 +23,7 @@
                 android:id="@+id/collapse_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:background="@drawable/image4"
+                android:background="@drawable/ic_stars_black_24dp"
                 app:contentScrim="@color/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -31,15 +31,16 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"></android.support.v7.widget.Toolbar>
+                    app:layout_collapseMode="pin"/>
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
                     android:layout_marginTop="?attr/actionBarSize">
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cardview_avatar"
+                    <ImageView
+                        android:src="@drawable/ic_pause_80dp"
+                        android:id="@+id/iv_avatar"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_marginEnd="8dp"
@@ -47,13 +48,7 @@
                         android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/image2" />
-                    </android.support.v7.widget.CardView>
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                     <TextView
                         android:id="@+id/tv_songname_sdetail"
@@ -95,8 +90,6 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/tv_songname_sdetail"
                         app:layout_constraintTop_toBottomOf="@+id/tv_songname_sdetail" />
-
-
                 </android.support.constraint.ConstraintLayout>
 
             </android.support.design.widget.CollapsingToolbarLayout>
@@ -118,6 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp">
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/btn_record"
                         android:clickable="true"
                         android:background="@drawable/btn_ripple"
                         android:layout_weight="1"
@@ -155,6 +149,7 @@
 
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/btn_duet_open"
                         android:clickable="true"
                         android:background="@drawable/btn_ripple"
                         android:layout_weight="1"
@@ -192,6 +187,7 @@
 
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/btn_video_open"
                         android:clickable="true"
                         android:background="@drawable/btn_ripple"
                         android:layout_weight="1"
@@ -244,100 +240,59 @@
                         android:textColor="#433f4a"
                         android:textSize="18sp" />
 
-                    <LinearLayout
-
+                    <RelativeLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="60dp">
                         <TextView
+                            android:id="@+id/tvIndexUser"
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:text="1"
                             android:textSize="16dp"
+                            android:layout_centerVertical="true"
                             android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                        <android.support.v7.widget.CardView
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ivAvatarUser"
                             app:cardCornerRadius="19dp"
                             android:layout_gravity="center_vertical"
                             android:layout_width="38dp"
-                            android:layout_height="38dp">
-                            <ImageView
-                                android:src="@drawable/image1"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-                        </android.support.v7.widget.CardView>
+                            android:layout_height="38dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/image1"
+                            android:layout_toEndOf="@id/tvIndexUser"/>
                         <TextView
-                            android:layout_marginLeft="16dp"
-                            android:layout_gravity="center_vertical"
+                            android:layout_toEndOf="@id/ivAvatarUser"
+                            android:id="@+id/tvUserName"
+                            android:layout_marginStart="16dp"
+                            android:layout_centerVertical="true"
                             android:textSize="22sp"
                             android:text="Faith"
-                            android:layout_width="wrap_content"
+                            android:lines="1"
+                            android:ellipsize="end"
+                            android:layout_width="180dp"
                             android:layout_height="wrap_content" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp">
                         <TextView
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:text="2"
-                            android:textSize="16dp"
-                            android:layout_gravity="center_vertical"
+                            android:id="@+id/tv_numview_srsong"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="10 views"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="8dp"/>
+                        <TextView
+                            android:text="10 likes"
+                            android:id="@+id/tv_numlike_srsong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="8dp"
+                            android:layout_toLeftOf="@id/tv_numview_srsong"/>
 
-                        <android.support.v7.widget.CardView
-                            app:cardCornerRadius="19dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_width="38dp"
-                            android:layout_height="38dp">
-                            <ImageView
-                                android:src="@drawable/image1"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-                        </android.support.v7.widget.CardView>
-                        <TextView
-                            android:layout_marginLeft="16dp"
-                            android:layout_gravity="center_vertical"
-                            android:textSize="22sp"
-                            android:text="Aya Villarosa"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp">
-                        <TextView
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:text="2"
-                            android:textSize="16dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <android.support.v7.widget.CardView
-                            app:cardCornerRadius="19dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_width="38dp"
-                            android:layout_height="38dp">
-                            <ImageView
-                                android:src="@drawable/image1"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-                        </android.support.v7.widget.CardView>
-                        <TextView
-                            android:layout_marginLeft="16dp"
-                            android:layout_gravity="center_vertical"
-                            android:textSize="22sp"
-                            android:text="Aya Villarosa"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
+                    </RelativeLayout>
 
                 </LinearLayout>
             </LinearLayout>

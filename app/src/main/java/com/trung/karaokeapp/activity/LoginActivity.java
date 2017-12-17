@@ -59,6 +59,10 @@ public class LoginActivity extends AppCompatActivity {
         service = RetrofitBuilder.createService(ApiService.class);
         tokenManager = TokenManager.getInstance(getSharedPreferences(PREFS, MODE_PRIVATE));
 
+        if (tokenManager.getToken().getAccessToken() != null) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     @OnClick(R.id.btn_login)

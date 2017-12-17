@@ -2,21 +2,16 @@ package com.trung.karaokeapp.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 
@@ -26,6 +21,7 @@ import com.trung.karaokeapp.activity.FriendActivity;
 import com.trung.karaokeapp.activity.LocalSongsActivity;
 import com.trung.karaokeapp.activity.PhotoManageActivity;
 import com.trung.karaokeapp.activity.PlaylistActivity;
+import com.trung.karaokeapp.activity.SettingsActivity;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -44,6 +40,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         //toolbar
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_profile);
+        setUpToolbar(toolbar);
 
         //button
         RelativeLayout playlist = view.findViewById(R.id.btn_playlist_open);
@@ -64,6 +61,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         gridView.setMinimumHeight(1000);
         return view;
+    }
+
+    private void setUpToolbar(Toolbar toolbar) {
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.mn_settings:
+                        startActivity(new Intent(getContext(), SettingsActivity.class));
+                        break;
+                    default:break;
+                }
+
+                return true;
+            }
+        });
     }
 
     @Override
