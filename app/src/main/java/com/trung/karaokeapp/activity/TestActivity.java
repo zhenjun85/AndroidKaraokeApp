@@ -1,35 +1,68 @@
 package com.trung.karaokeapp.activity;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.DownloadManager;
-import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.network.ApiService;
+import com.trung.karaokeapp.network.RetrofitBuilder;
+
+import java.io.File;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TestActivity extends AppCompatActivity {
     private static final String TAG = "TestActivity";
 
+    ApiService service;
+
+    @BindView(R.id.btnButton)Button btnButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_replay_record);
+        setContentView(R.layout.activity_test);
+        ButterKnife.bind(this);
 
-        final String url1 = "http://10.0.2.2:8000/store/songs/Adele%20-%20Someone%20Like%20You/Adele%20-%20Someone%20Like%20You.mp3";
-        final String url2 = "http://10.0.2.2:8000/store/songs/Adele - Someone Like You/Adele - Someone Like You.txt";
-        final String url4 = "http://10.0.2.2:8000/store/1.mp3";
-        final String url3 = "https://3.bp.blogspot.com/-EFwVj5ztKtQ/V8Qs6Viyl6I/AAAAAAAADWs/031SPYFrUnM-wreztTT4fgPe1yQj3LFhgCPcB/s1600/developer.jpg";
+        service = RetrofitBuilder.createService(ApiService.class);
 
     }
 
+    @OnClick(R.id.btnButton)
+    void onClcc() {
 
+        String filePath = "/storage/emulated/0/app_karaoke/records/4_I Gotta Feeling_201712210146_raw_10_00-05.mp3";
+
+        File file = new File(filePath);
+
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("audio/mpeg"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("myfile", file.getName(), requestBody);
+
+        RequestBody description = RequestBody.create(MultipartBody.FORM, "hihihi");
+        Call<ResponseBody> callable = service.postAudioRecord(body, description);
+        callable.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d(TAG, response.toString());
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "fail" + t.getMessage());
+            }
+        });
+    }
 
 }

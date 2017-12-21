@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,9 +43,9 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private final String PREFS = "prefs";
 
-    @BindView(R.id.til_email)
-    TextInputLayout til_email;
+    @BindView(R.id.til_email) TextInputLayout til_email;
     @BindView(R.id.til_password) TextInputLayout til_password;
+    @BindView(R.id.ivLogo) ImageView ivLogo;
 
     ApiService service;
     Call<AccessToken> call;
@@ -63,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
+
+        //load Logo
+        ivLogo.setBackground(getDrawable(R.drawable.logo));
     }
 
     @OnClick(R.id.btn_login)

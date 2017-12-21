@@ -1,7 +1,7 @@
 package com.trung.karaokeapp.activity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,14 +9,9 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.ShowableListMenu;
-import android.support.v7.widget.ForwardingListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -24,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.TokenManager;
 import com.trung.karaokeapp.Utils;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.libffmpeg.ExecuteBinaryResponseHandler;
@@ -31,15 +27,19 @@ import com.trung.karaokeapp.libffmpeg.FFmpeg;
 import com.trung.karaokeapp.libffmpeg.LoadBinaryResponseHandler;
 import com.trung.karaokeapp.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.trung.karaokeapp.libffmpeg.exceptions.FFmpegNotSupportedException;
+import com.trung.karaokeapp.network.ApiService;
+import com.trung.karaokeapp.network.RetrofitBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ReplayRecordActivity extends AppCompatActivity {
     private static final String TAG = "ReplayRecordActivity";
@@ -63,11 +63,17 @@ public class ReplayRecordActivity extends AppCompatActivity {
     private FFmpeg ffmpeg;
     private String mp3Record;
 
+    TokenManager tokenManager;
+    ApiService service;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replay_record);
         ButterKnife.bind(this);
+
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", Context.MODE_PRIVATE));
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
         //get from Intent
         String songJson = getIntent().getStringExtra("song");
@@ -122,8 +128,6 @@ public class ReplayRecordActivity extends AppCompatActivity {
 
                 }
             });
-
-
 
             mediaPlayerForRecord.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -200,7 +204,8 @@ public class ReplayRecordActivity extends AppCompatActivity {
         alertDialog.show();
 
 //        String cmd = "-y -i " + beat + " -i " + record + " -filter_complex amix=inputs=2:duration=shortest -ac 2 -c:a libmp3lame -q:a 2 " + output;
-        mp3Record = record.substring(0, record.length() - 4) + ".mp3";
+        String duration = tvDuration.getText().toString().replace(":", "-");
+        mp3Record = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp3";
         ArrayList<String> comm = new ArrayList<>();
         comm.add("-y");
         comm.add("-i");
@@ -230,7 +235,8 @@ public class ReplayRecordActivity extends AppCompatActivity {
         alertDialog.show();
 
 //        String cmd = "-y -i " + beat + " -i " + record + " -filter_complex amix=inputs=2:duration=shortest -ac 2 -c:a libmp3lame -q:a 2 " + output;
-        String mp3Record = record.substring(0, record.length() - 4) + ".mp3";
+        String duration = tvDuration.getText().toString().replace(":", "-");
+        mp3Record = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp3";
         ArrayList<String> comm = new ArrayList<>();
         comm.add("-y");
         comm.add("-i");
@@ -265,6 +271,20 @@ public class ReplayRecordActivity extends AppCompatActivity {
         }
     }
     private void execFFmpegBinary(final String[] command, final AlertDialog alertDialog, final boolean isPost) {
+        //update viewNo
+        Call<Boolean> call = service.updateViewNo(songKar.getId());
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                Log.d(TAG, response.toString());
+            }
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Log.d(TAG, "Failure:" + t.getMessage());
+            }
+        });
+
+        //process mixing mp3
         try {
             ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                 @Override

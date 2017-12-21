@@ -1,12 +1,16 @@
 package com.trung.karaokeapp.viewmodel;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.trung.karaokeapp.entities.RecordUserKs;
 import com.trung.karaokeapp.fragment.FeedFragment;
 import com.trung.karaokeapp.fragment.HomeFragment;
 import com.trung.karaokeapp.fragment.NotificationFragment;
 import com.trung.karaokeapp.fragment.ProfileFragment;
 import com.trung.karaokeapp.fragment.SongBookFragment;
+
+import java.util.List;
 
 /**
  * Created by avc on 12/8/2017.
@@ -26,5 +30,6 @@ public class MainActivityViewModel extends ViewModel {
         profileFragment = null;
         notificationFragment = null;
     }
+
 
 }

@@ -28,255 +28,117 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/label_newsongs"/>
-
-            <!--Recycler | New Songs-->
-            <HorizontalScrollView
-                android:background="#efeef1"
+            <!-- Label | New Songs -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none">
-
-                <LinearLayout
+                android:background="#efeef1">
+                <TextView
+                    android:padding="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="8dp">
+                    android:text="@string/label_group_new_songs"
+                    android:textColor="#433f4a"
+                    android:textSize="18sp" />
 
-                    <include layout="@layout/item_rv_newsong"/>
+                <TextView
+                    android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="#433f4a"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/btnSeeMoreNewSongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_ripple"
+                    android:text="@string/text_see_more"
+                    android:textSize="18sp" />
+            </RelativeLayout>
 
-                    <include layout="@layout/item_rv_newsong"/>
-
-                    <include layout="@layout/item_rv_newsong"/>
-
-                    <include layout="@layout/item_rv_newsong"/>
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <include layout="@layout/label_featuresongs"/>
-
-            <!--Recycler | Feature Songs-->
-            <LinearLayout
+            <!--Recycler | New Songs-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvNewSongs"
+                android:background="#efeef1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <include layout="@layout/item_rv_feature_songs"/>
-                <include layout="@layout/item_rv_feature_songs"/>
-            </LinearLayout>
+                android:layout_height="wrap_content"/>
 
-            <include layout="@layout/item_topic_label_popularsharerecords"/>
-            <GridLayout
-                android:id="@+id/grid"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2">
-
-                <android.support.constraint.ConstraintLayout
+                android:background="#efeef1">
+                <TextView
+                    android:padding="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="220dp"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="0dp"
-                        android:layout_height="168dp"
-                        android:src="@color/colorPrimaryDark"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView33"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="112 views"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView35"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="150dp"
-                        android:text="Some body like you"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/imageView7" />
-
-                    <TextView
-                        android:id="@+id/textView37"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="User1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
-                    <TextView
-                        android:id="@+id/textView38"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:singleLine="true"
-                        android:text="So I gave up on the grid view and just used a some linear layouts. I made a vertical one and then added 2 horizontals"
-                        android:textColor="#FFB7B7B7"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView37" />
-
-                </android.support.constraint.ConstraintLayout>
-
-                <android.support.constraint.ConstraintLayout
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_group_feature_songs"
+                    android:textColor="#433f4a"
+                    android:textSize="18sp" />
+                <TextView
+                    android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="#433f4a"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/btnSeeMoreFeatureSongs"
                     android:layout_width="wrap_content"
-                    android:layout_height="220dp"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    android:padding="8dp">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_ripple"
+                    android:text="@string/text_see_more"
+                    android:textSize="18sp" />
+            </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="0dp"
-                        android:layout_height="170dp"
-                        android:src="@color/colorPrimaryDark"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+            <!--Recycler | Feature Songs-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvFeatureSongs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:id="@+id/textView33"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="112 views"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+            <!-- Label | Pupular shared records -->
+            <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#efeef1">
 
-                    <TextView
-                        android:id="@+id/textView35"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="150dp"
-                        android:text="Some body like you"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/imageView7" />
-
-                    <TextView
-                        android:id="@+id/textView37"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="User1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
-                    <TextView
-                        android:id="@+id/textView38"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:singleLine="true"
-                        android:text="So I gave up on the grid view and just used a some linear layouts. I made a vertical one and then added 2 horizontals"
-                        android:textColor="#FFB7B7B7"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView37" />
-
-                </android.support.constraint.ConstraintLayout>
-
-                <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                <TextView
+                    android:padding="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="220dp"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    android:padding="8dp">
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_group_p_sharerecords"
+                    android:textColor="#433f4a"
+                    android:textSize="18sp" />
 
-                    <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="0dp"
-                        android:layout_height="170dp"
-                        android:src="@color/colorPrimaryDark"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView33"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="112 views"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView35"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="150dp"
-                        android:text="Some body like you"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/imageView7" />
-
-                    <TextView
-                        android:id="@+id/textView37"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="User1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
-                    <TextView
-                        android:id="@+id/textView38"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:singleLine="true"
-                        android:text="So I gave up on the grid view and just used a some linear layouts. I made a vertical one and then added 2 horizontals"
-                        android:textColor="#FFB7B7B7"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView37" />
-
-                </android.support.constraint.ConstraintLayout>
-
-            </GridLayout>
+                <TextView
+                    android:id="@+id/btnSeeMorePopularSR"
+                    android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="#433f4a"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_ripple"
+                    android:text="@string/text_see_more"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+            <com.trung.karaokeapp.appclass.MyGridView
+                android:id="@+id/gvPopularSharedSongs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:numColumns="2"/>
 
         </LinearLayout>
 

@@ -32,18 +32,17 @@
         android:id="@+id/tv_song_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="04:30"
+        android:text=""
         android:textColor="@android:color/white"
         app:layout_constraintTop_toTopOf="@id/iv_song_cover"
         app:layout_constraintRight_toRightOf="@id/iv_song_cover"/>
 
     <TextView
-        android:id="@+id/tv_song_name"
+        android:id="@+id/tvSongName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Some body like you"
         android:textColor="@android:color/white"
-
         android:lines="1"
         android:ellipsize="end"
         app:layout_constraintLeft_toLeftOf="@id/iv_song_cover"

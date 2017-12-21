@@ -27,11 +27,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-implements HomeFragment.OnFragmentInteractionListener,
+implements
         SongBookFragment.OnFragmentInteractionListener,
         FeedFragment.OnFragmentInteractionListener,
-        NotificationFragment.OnFragmentInteractionListener,
-        ProfileFragment.OnFragmentInteractionListener
+        NotificationFragment.OnFragmentInteractionListener
 {
     @BindView(R.id.navigation) BottomNavigationView bottomNavigation;
 

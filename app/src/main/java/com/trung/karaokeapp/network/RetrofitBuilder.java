@@ -15,8 +15,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class RetrofitBuilder {
 
-    private static final String BASE_URL = "http://10.0.2.2:8000/api/";
-//    private static final String BASE_URL = "http://192.168.3.7:8000/api/";
+    private static final String BASE_URL = AppURL.baseUrlApi + "/";
 
     private final static OkHttpClient client = buildClient();
     private final static Retrofit retrofit = buildRetrofit(client);
@@ -39,8 +38,8 @@ public class RetrofitBuilder {
                     }
                 });
 
-        if(BuildConfig.DEBUG){
-            //builder.addNetworkInterceptor(new StethoInterceptor());
+        if(/*BuildConfig.DEBUG*/true){
+            builder.addNetworkInterceptor(new StethoInterceptor());
         }
 
         return builder.build();

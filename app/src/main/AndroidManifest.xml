@@ -71,7 +71,9 @@
         <activity android:name=".activity.RecordDuetActivity" />
         <activity android:name=".activity.VideoActivity" />
         <activity android:name=".activity.ReplayRecordActivity" />
-        <activity android:name=".activity.PostRecordActivity"></activity>
+        <activity android:name=".activity.PostRecordActivity" />
+        <activity android:name=".activity.SeeMoreSongsActivity" />
+        <activity android:name=".activity.SeeMorePopularSrActivity"></activity>
     </application>
 
 </manifest>

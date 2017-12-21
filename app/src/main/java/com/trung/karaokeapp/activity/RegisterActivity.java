@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.TokenManager;
@@ -33,6 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.til_name) TextInputLayout til_name;
     @BindView(R.id.til_email) TextInputLayout til_email;
     @BindView(R.id.til_password) TextInputLayout til_password;
+    @BindView(R.id.ivLogo) ImageView ivLogo;
+
 
     ApiService service;
     Call<AccessToken> call;
@@ -52,6 +55,9 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
             finish();
         }
+
+        //load image logo
+        ivLogo.setBackground(getDrawable(R.drawable.logo));
     }
 
     @OnClick(R.id.btn_register)

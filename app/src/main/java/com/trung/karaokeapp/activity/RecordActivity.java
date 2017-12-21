@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.Utils;
@@ -94,7 +95,7 @@ public class RecordActivity extends AppCompatActivity {
         playingRunable = new PlayingRunable();
 
         //textStatus
-        tvStatus.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+//        tvStatus.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
 
         //clear linear layout container
         llLyricContainer.removeAllViews();
@@ -106,9 +107,14 @@ public class RecordActivity extends AppCompatActivity {
         String songJsonText = getIntent().getStringExtra("song");
         songKaraokeSong = new Gson().fromJson(songJsonText, KaraokeSong.class);
 
+
+
         //update songInfo to activity
         tvSongName.setText(songKaraokeSong.getName());
         tvGenre.setText(String.format("Genre: %s", songKaraokeSong.getGenre()));
+        //load Imagecover
+        String folderSong =  AppURL.baseUrlSongAndLyric + "/" + songKaraokeSong.getBeat().substring(0, songKaraokeSong.getBeat().length() - 4);
+        Glide.with(RecordActivity.this).load(folderSong + "/" + songKaraokeSong.getImage()).into(ivCoverSong);
 
         //media
         mediaPlayer = new MediaPlayer();
@@ -119,11 +125,9 @@ public class RecordActivity extends AppCompatActivity {
 
 
         //prepare url
-        String baseUrl = AppURL.baseUrlSongAndLyric;
-        String folder = songKaraokeSong.getBeat().substring(0, songKaraokeSong.getBeat().length() - 4);
-        final String urlBeat = baseUrl + folder + "/" + songKaraokeSong.getBeat();
-        String urlLyric = baseUrl + folder + "/" + songKaraokeSong.getLyric();
-        //1. Download Beat and Lyric files
+        String urlBeat = folderSong + "/" + songKaraokeSong.getBeat();
+        String urlLyric = folderSong + "/" + songKaraokeSong.getLyric();
+        //1. Download Beat and Lyric
         new DownloadFileFromURL().execute(urlLyric, urlBeat);
 
         //isReadyObserver -> load data, and prepare recording
@@ -136,7 +140,7 @@ public class RecordActivity extends AppCompatActivity {
                     lyricSize = lyricFile.allLines.size();
 
                     final String recordName = getRecordName(songKaraokeSong);
-                    String pathRecord = Environment.getExternalStorageDirectory() + "/app_karaoke/records";
+                    String pathRecord = Environment.getExternalStorageDirectory() + "/" + AppURL.baseRecordsFolder;
 
                     File file = new File(pathRecord);
                     if (!file.exists()){

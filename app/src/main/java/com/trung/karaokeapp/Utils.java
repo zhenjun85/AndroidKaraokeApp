@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
@@ -66,21 +69,20 @@ public class Utils {
 
     public static LyricFile openSongFile(String urlLyric) {
         LyricFile lyricFile = new LyricFile();
-
+//        urlLyric = "/sdcard/app_karaoke/songs/Alan Walker - Faded.txt";
 
         try {
             FileInputStream fileInputStream = new FileInputStream(urlLyric);
             BufferedReader bR = new BufferedReader(new InputStreamReader(fileInputStream));
 
             //param for while loop
-            String lineStr = bR.readLine();
-            Note newNote = null;
+            String lineStr;
+            Note newNote;
             Line lineTmp = new Line();
 
-            //region whileLoop1
-            while (lineStr != null) {
-                char cFirst;
-                switch ( cFirst = lineStr.charAt(0)) {
+            while( (lineStr = bR.readLine()) != null ){
+//                Log.d("___", lineStr);
+                switch ( lineStr.charAt(0)) {
                     case '#':
                         lineStr = lineStr.substring(1); //remove char 0
                         String[] info = lineStr.split(":");
@@ -131,35 +133,38 @@ public class Utils {
                         break;
                     case ':':
                         newNote = parseLineToNote(lineStr, 1, lyricFile.bpm);
-                        lineTmp.notes.add(newNote);
+                        if (newNote != null){
+                            lineTmp.notes.add(newNote);
+                        }
                         break;
                     case 'E':
-                        String s2 = "";
+                        String sTmp = "";
+
                         Note notePrevious = lineTmp.notes.get(lineTmp.notes.size() - 1);
                         lineTmp.end = notePrevious.start + notePrevious.length;
                         lineTmp.start =  lineTmp.notes.get(0).start;
 
                         //get line lyric
                         for (Note iNote : lineTmp.notes) {
-                            s2 += iNote.text;
+                            sTmp = sTmp.concat(iNote.text);
                         }
-                        lineTmp.lyric = s2;
+                        lineTmp.lyric = sTmp;
                         lyricFile.allLines.add(lineTmp);
                         break;
 
                     case '-': //end line
                         String[] mStr = lineStr.split(" ");
-                        String  s = "";
+                        StringBuilder s = new StringBuilder();
 
                         lineTmp.end =  convertBeatToMs(Integer.parseInt(mStr[1]), lyricFile.bpm);
                         lineTmp.start =  lineTmp.notes.get(0).start;
 
                         //get line lyric
                         for (Note note: lineTmp.notes) {
-                            s += note.text;
+                            s.append(note.text);
                         }
 
-                        lineTmp.lyric = s;
+                        lineTmp.lyric = s.toString();
                         lyricFile.allLines.add(lineTmp);
 
                         //new lineTmp prepare for next line
@@ -175,8 +180,8 @@ public class Utils {
                         break;
                     default:break;
                 }
-                lineStr = bR.readLine();
             }
+
             fileInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -191,6 +196,72 @@ public class Utils {
 
         return String.format("%s:%s", minutes < 10 ? "0" + minutes : "" + minutes, (seconds < 10) ? "0" + seconds : "" + seconds);
     }
+
+    public static int dayBetweenPastAndNow(String sDate1) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date date1 = null;
+        Date date2 = new Date();
+
+        try {
+            date1 = format.parse(sDate1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+        //in milliseconds
+        long diff = date2.getTime() - date1.getTime();
+
+        /*long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000) % 24;*/
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        return (int) diffDays;
+    }
+
+    public static String recentTime(String sDate1) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String result = "";
+        Date date1 = null;
+        Date date2 = new Date();
+
+        try {
+            date1 = format.parse(sDate1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        //in milliseconds
+        long diff = date2.getTime() - date1.getTime();
+
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000) % 24;
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        //UTC time zone +0
+        diffHours -= 7;
+
+        if (diffDays > 0) {
+            result = diffDays + " days " + diffHours + " hours";
+        }else {
+            if (diffHours > 0) {
+                result = diffHours + " hours " + diffMinutes + " minutes";
+            }else {
+                if (diffMinutes > 0) {
+                    result = diffMinutes + " minutes " + diffSeconds + " s";
+                }else {
+                    result = diffSeconds + " s";
+                }
+            }
+        }
+
+        return result;
+    }
+
     public static int convertPitchToScore(float pitch, int sampleNote) {
         pitch = pitch < 0 ? 0 : pitch;
         int n = (int)Math.round(Math.log(pitch / 440)/Math.log(2) * 12);

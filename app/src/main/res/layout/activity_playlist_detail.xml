@@ -12,7 +12,6 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@drawable/image4"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -58,7 +57,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"/>
                 <TextView
-                    android:id="@+id/tv_song_name"
+                    android:id="@+id/tvSongName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Chia tay"
@@ -72,13 +71,13 @@
                     app:layout_constraintLeft_toRightOf="@id/tv_index"
                     app:layout_constraintRight_toLeftOf="@id/btn_more"/>
                 <TextView
-                    android:id="@+id/tv_singer"
+                    android:id="@+id/tvSinger"
                     android:text="Bui Anh Tuan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    app:layout_constraintTop_toBottomOf="@id/tv_song_name"
-                    app:layout_constraintLeft_toLeftOf="@id/tv_song_name"/>
+                    app:layout_constraintTop_toBottomOf="@id/tvSongName"
+                    app:layout_constraintLeft_toLeftOf="@id/tvSongName"/>
                 <ImageButton
                     android:id="@+id/btn_more"
                     android:background="@drawable/btn_more_item_pl"

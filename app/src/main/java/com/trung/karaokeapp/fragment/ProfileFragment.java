@@ -4,85 +4,154 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.TokenManager;
 import com.trung.karaokeapp.activity.DuetManageActivity;
 import com.trung.karaokeapp.activity.FriendActivity;
 import com.trung.karaokeapp.activity.LocalSongsActivity;
 import com.trung.karaokeapp.activity.PhotoManageActivity;
 import com.trung.karaokeapp.activity.PlaylistActivity;
 import com.trung.karaokeapp.activity.SettingsActivity;
+import com.trung.karaokeapp.entities.SharedRecord;
+import com.trung.karaokeapp.entities.User;
+import com.trung.karaokeapp.network.ApiService;
+import com.trung.karaokeapp.network.AppURL;
+import com.trung.karaokeapp.network.RetrofitBuilder;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ProfileFragment extends Fragment {
+    private static final String TAG = "ProfileFragment";
+    @BindView(R.id.btnSettings) ImageButton btnSettings;
+    @BindView(R.id.btn_playlist_open) RelativeLayout btnPlaylist;
+    @BindView(R.id.btn_local_song_open) RelativeLayout btnLocalSong;
+    @BindView(R.id.btn_duet_open) RelativeLayout btnDuet;
+    @BindView(R.id.btn_photo_open) RelativeLayout btnPhoto;
+    @BindView(R.id.btn_friend_open) RelativeLayout btnFriend;
+
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvBirthday) TextView tvBirthday;
+    @BindView(R.id.tvIntroduce) TextView tvIntroduce;
+    @BindView(R.id.iv_user_avatar) CircleImageView ivUserAvatar;
+    @BindView(R.id.gv_shared_songs) GridView gvSharedSongs;
 
 
-    private OnFragmentInteractionListener mListener;
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    TokenManager tokenManager;
+    ApiService service;
+    Call<User> callUser;
+    private User user;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        ButterKnife.bind(this, view);
+        tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE));
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
-        //toolbar
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.menu_profile);
-        setUpToolbar(toolbar);
-
-        //button
-        RelativeLayout playlist = view.findViewById(R.id.btn_playlist_open);
-        RelativeLayout local_song = view.findViewById(R.id.btn_local_song_open);
-        RelativeLayout duet = view.findViewById(R.id.btn_duet_open);
-        RelativeLayout photo = view.findViewById(R.id.btn_photo_open);
-        RelativeLayout friend = view.findViewById(R.id.btn_friend_open);
-        playlist.setOnClickListener(this);
-        local_song.setOnClickListener(this);
-        duet.setOnClickListener(this);
-        photo.setOnClickListener(this);
-        friend.setOnClickListener(this);
-
-        //grid view
-        GridView gridView = view.findViewById(R.id.gv_shared_songs);
-        MyAdapter myAdapter = new MyAdapter(getContext());
-        gridView.setAdapter(myAdapter);
-
-        gridView.setMinimumHeight(1000);
-        return view;
-    }
-
-    private void setUpToolbar(Toolbar toolbar) {
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        callUser = service.getUser();
+        callUser.enqueue(new Callback<User>() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.mn_settings:
-                        startActivity(new Intent(getContext(), SettingsActivity.class));
-                        break;
-                    default:break;
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG, response.toString());
+
+                //load user information
+                user = response.body();
+                tvName.setText(user.getName());
+                tvBirthday.setText(user.getBirthday());
+                tvIntroduce.setText(user.getIntroduce());
+
+                if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
+                    Glide.with(getContext()).load(AppURL.baseUrl + "/store/avatar.png").into(ivUserAvatar);
                 }
 
-                return true;
+                //get user record
+                Call<List<SharedRecord>> callSR = service.getSharedRecord();
+                callSR.enqueue(new Callback<List<SharedRecord>>() {
+                    @Override
+                    public void onResponse(Call<List<SharedRecord>> call, Response<List<SharedRecord>> response) {
+                        Log.d(TAG, response.toString());
+                        //inflate to GridView
+
+                        //GridView
+                        MyAdapter myAdapter = new MyAdapter(getContext(), response.body());
+                        gvSharedSongs.setAdapter(myAdapter);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<SharedRecord>> call, Throwable t) {
+                        Log.d(TAG, t.getMessage());
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e(TAG, "failure" + t.getMessage());
             }
         });
+
+
+
+//        gridView.setMinimumHeight(1000);
+        return view;
+    }
+    @OnClick(R.id.btnSettings)
+    void openSettings() {
+        onMyClick(R.id.btnSettings);
+    }
+    @OnClick(R.id.btn_playlist_open)
+    void openPlaylist() {
+        onMyClick(R.id.btn_playlist_open);
+    }
+    @OnClick(R.id.btn_local_song_open)
+    void openLocalSongs() {
+        onMyClick(R.id.btn_local_song_open);
+    }
+    @OnClick(R.id.btn_duet_open)
+    void openDuets() {
+        onMyClick(R.id.btn_duet_open);
+    }
+    @OnClick(R.id.btn_photo_open)
+    void openPhotos() {
+        onMyClick(R.id.btn_photo_open);
+    }
+    @OnClick(R.id.btn_friend_open)
+    void openFriends() {
+        onMyClick(R.id.btn_friend_open);
     }
 
-    @Override
-    public void onClick(View view) {
-        Intent intent= null;
-        switch (view.getId()) {
+    public void onMyClick(int btnId) {
+        Intent intent = null;
+        switch (btnId) {
             case R.id.btn_playlist_open:
                 intent = new Intent(getContext(), PlaylistActivity.class);
                 break;
@@ -98,6 +167,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_friend_open:
                 intent = new Intent(getContext(), FriendActivity.class);
                 break;
+            case R.id.btnSettings:
+                intent = new Intent(getContext(), SettingsActivity.class);
+                break;
             default:break;
         }
         if (intent != null) {
@@ -107,15 +179,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     //Adapter for grid view
     public class MyAdapter extends BaseAdapter {
+        private List<SharedRecord> listSr;
         private Context context;
 
-        MyAdapter(Context c) {
+        MyAdapter(Context c, List<SharedRecord> listSr) {
             this.context = c;
+            this.listSr = listSr;
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return listSr.size();
         }
 
         @Override
@@ -134,38 +208,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 LayoutInflater inflater = getLayoutInflater();
                 view = inflater.inflate(R.layout.item_rv_shared_song_profile, viewGroup, false);
             }
+            SharedRecord sr = listSr.get(i);
+
+            TextView tvSongName = view.findViewById(R.id.tvSongName);
+            tvSongName.setText(sr.getKaraoke().getName());
+            TextView tvNumView = view.findViewById(R.id.tv_num_views);
+            tvNumView.setText(sr.getViewNo() + (sr.getViewNo() > 1 ? " views" : " view"));
+            TextView tvAuthor = view.findViewById(R.id.tv_post_author);
+            tvAuthor.setText(user.getName());
+            TextView tvPostContent = view.findViewById(R.id.tv_post_content);
+            tvPostContent.setText(sr.getContent());
+            ImageView ivCoverSong = view.findViewById(R.id.iv_song_cover);
+
+            String folderPath = sr.getKaraoke().getBeat().substring(0, sr.getKaraoke().getBeat().length() - 4);
+            Glide.with(getContext()).load( AppURL.baseUrlSongAndLyric + "/" + folderPath + "/" + sr.getKaraoke().getImage() ).into(ivCoverSong);
 
             return view;
         }
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }
