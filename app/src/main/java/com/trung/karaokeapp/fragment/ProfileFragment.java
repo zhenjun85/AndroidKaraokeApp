@@ -2,21 +2,17 @@ package com.trung.karaokeapp.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,6 +26,7 @@ import com.trung.karaokeapp.activity.LocalSongsActivity;
 import com.trung.karaokeapp.activity.PhotoManageActivity;
 import com.trung.karaokeapp.activity.PlaylistActivity;
 import com.trung.karaokeapp.activity.SettingsActivity;
+import com.trung.karaokeapp.adapter.PopularSrAdapter;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.entities.User;
 import com.trung.karaokeapp.network.ApiService;
@@ -59,7 +56,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.tvBirthday) TextView tvBirthday;
     @BindView(R.id.tvIntroduce) TextView tvIntroduce;
     @BindView(R.id.iv_user_avatar) CircleImageView ivUserAvatar;
-    @BindView(R.id.gv_shared_songs) GridView gvSharedSongs;
+    @BindView(R.id.rvShareSongs) RecyclerView rvSharedSongs;
 
 
     TokenManager tokenManager;
@@ -99,9 +96,9 @@ public class ProfileFragment extends Fragment {
                         Log.d(TAG, response.toString());
                         //inflate to GridView
 
-                        //GridView
-                        MyAdapter myAdapter = new MyAdapter(getContext(), response.body());
-                        gvSharedSongs.setAdapter(myAdapter);
+                        PopularSrAdapter adapter = new PopularSrAdapter(getContext(), response.body());
+                        rvSharedSongs.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                        rvSharedSongs.setAdapter(adapter);
 
                     }
 
@@ -177,53 +174,4 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    //Adapter for grid view
-    public class MyAdapter extends BaseAdapter {
-        private List<SharedRecord> listSr;
-        private Context context;
-
-        MyAdapter(Context c, List<SharedRecord> listSr) {
-            this.context = c;
-            this.listSr = listSr;
-        }
-
-        @Override
-        public int getCount() {
-            return listSr.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                LayoutInflater inflater = getLayoutInflater();
-                view = inflater.inflate(R.layout.item_rv_shared_song_profile, viewGroup, false);
-            }
-            SharedRecord sr = listSr.get(i);
-
-            TextView tvSongName = view.findViewById(R.id.tvSongName);
-            tvSongName.setText(sr.getKaraoke().getName());
-            TextView tvNumView = view.findViewById(R.id.tv_num_views);
-            tvNumView.setText(sr.getViewNo() + (sr.getViewNo() > 1 ? " views" : " view"));
-            TextView tvAuthor = view.findViewById(R.id.tv_post_author);
-            tvAuthor.setText(user.getName());
-            TextView tvPostContent = view.findViewById(R.id.tv_post_content);
-            tvPostContent.setText(sr.getContent());
-            ImageView ivCoverSong = view.findViewById(R.id.iv_song_cover);
-
-            String folderPath = sr.getKaraoke().getBeat().substring(0, sr.getKaraoke().getBeat().length() - 4);
-            Glide.with(getContext()).load( AppURL.baseUrlSongAndLyric + "/" + folderPath + "/" + sr.getKaraoke().getImage() ).into(ivCoverSong);
-
-            return view;
-        }
-    }
 }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,11 +24,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.TokenManager;
+import com.trung.karaokeapp.Utils;
 import com.trung.karaokeapp.activity.SeeMorePopularSrActivity;
 import com.trung.karaokeapp.activity.SeeMoreSongsActivity;
 import com.trung.karaokeapp.adapter.AllSongsAdapter;
 import com.trung.karaokeapp.adapter.FeatureSongsAdapter;
 import com.trung.karaokeapp.adapter.NewSongsAdapter;
+import com.trung.karaokeapp.adapter.PopularSrAdapter;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.network.ApiService;
@@ -57,8 +60,7 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.rvNewSongs) RecyclerView rvNewSongs;
     @BindView(R.id.rvFeatureSongs) RecyclerView rvFeatureSongs;
-    @BindView(R.id.gvPopularSharedSongs)
-    GridView gvPopularSharedRecords;
+    @BindView(R.id.rvPopularSr)RecyclerView rvPopularSr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,9 +107,9 @@ public class HomeFragment extends Fragment {
                 Log.d(TAG, response.toString());
 
                 //GridView
-                MyAdapter myAdapter = new MyAdapter(getContext(), response.body());
-                gvPopularSharedRecords.setAdapter(myAdapter);
-
+                rvPopularSr.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                PopularSrAdapter myAdapter = new PopularSrAdapter(getContext(), response.body());
+                rvPopularSr.setAdapter(myAdapter);
             }
 
             @Override
@@ -116,57 +118,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
-    public class MyAdapter extends BaseAdapter {
-        private List<SharedRecord> listSr;
-        private Context context;
-
-        MyAdapter(Context c, List<SharedRecord> listSr) {
-            this.context = c;
-            this.listSr = listSr;
-        }
-
-        @Override
-        public int getCount() {
-            return listSr.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                LayoutInflater inflater = getLayoutInflater();
-                view = inflater.inflate(R.layout.item_rv_shared_song_profile, viewGroup, false);
-            }
-            SharedRecord sr = listSr.get(i);
-
-            TextView tvSongName = view.findViewById(R.id.tvSongName);
-            tvSongName.setText(sr.getKaraoke().getName());
-            TextView tvNumView = view.findViewById(R.id.tv_num_views);
-            tvNumView.setText(sr.getViewNo() + (sr.getViewNo() > 1 ? " views" : " view"));
-            TextView tvAuthor = view.findViewById(R.id.tv_post_author);
-            tvAuthor.setText(sr.getUser().getName());
-            TextView tvPostContent = view.findViewById(R.id.tv_post_content);
-            tvPostContent.setText(sr.getContent());
-            ImageView ivCoverSong = view.findViewById(R.id.iv_song_cover);
-
-            String folderPath = sr.getKaraoke().getBeat().substring(0, sr.getKaraoke().getBeat().length() - 4);
-            Glide.with(getContext()).load( AppURL.baseUrlSongAndLyric + "/" + folderPath + "/" + sr.getKaraoke().getImage() ).into(ivCoverSong);
-
-            return view;
-        }
-    }
-
-
 
     private void getNewSongs() {
         callNewSongs = service.getNewSongs(5);

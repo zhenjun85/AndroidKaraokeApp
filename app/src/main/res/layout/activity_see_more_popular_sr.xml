@@ -15,22 +15,9 @@
             android:layout_height="?attr/actionBarSize"/>
     </android.support.design.widget.AppBarLayout>
 
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/rvPopularSr"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.trung.karaokeapp.appclass.MyGridView
-                android:id="@+id/gvPopularSharedSongs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:numColumns="2"/>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-
+        android:layout_height="match_parent"/>
 </android.support.design.widget.CoordinatorLayout>

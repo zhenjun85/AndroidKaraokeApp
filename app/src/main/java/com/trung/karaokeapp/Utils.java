@@ -202,13 +202,14 @@ public class Utils {
         Date date1 = null;
         Date date2 = new Date();
 
+        //db timezone +0; app timezone +7
+        date2.setTime(date2.getTime() - 7 * 60 * 60 * 1000);
+
         try {
             date1 = format.parse(sDate1);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
 
         //in milliseconds
         long diff = date2.getTime() - date1.getTime();
@@ -227,6 +228,9 @@ public class Utils {
         Date date1 = null;
         Date date2 = new Date();
 
+        //db timezone +0; app timezone +7
+        date2.setTime(date2.getTime() - 7 * 60 * 60 * 1000);
+
         try {
             date1 = format.parse(sDate1);
         } catch (ParseException e) {
@@ -242,17 +246,14 @@ public class Utils {
         long diffHours = diff / (60 * 60 * 1000) % 24;
         long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        //UTC time zone +0
-        diffHours -= 7;
-
         if (diffDays > 0) {
-            result = diffDays + " days " + diffHours + " hours";
+            result = diffDays + "d " + diffHours + "h";
         }else {
             if (diffHours > 0) {
-                result = diffHours + " hours " + diffMinutes + " minutes";
+                result = diffHours + "h " + diffMinutes + "m";
             }else {
                 if (diffMinutes > 0) {
-                    result = diffMinutes + " minutes " + diffSeconds + " s";
+                    result = diffMinutes + "m " + diffSeconds + "s";
                 }else {
                     result = diffSeconds + " s";
                 }

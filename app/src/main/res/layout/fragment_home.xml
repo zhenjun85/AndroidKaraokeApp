@@ -133,12 +133,17 @@
                     android:text="@string/text_see_more"
                     android:textSize="18sp" />
             </RelativeLayout>
-            <com.trung.karaokeapp.appclass.MyGridView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvPopularSr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--<com.trung.karaokeapp.appclass.MyGridView
                 android:id="@+id/gvPopularSharedSongs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:numColumns="2"/>
+                android:numColumns="2"/>-->
 
         </LinearLayout>
 
