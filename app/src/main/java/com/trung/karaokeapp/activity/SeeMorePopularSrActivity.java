@@ -8,23 +8,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.adapter.PopularSrAdapter;
 import com.trung.karaokeapp.entities.SharedRecord;
-import com.trung.karaokeapp.fragment.HomeFragment;
 import com.trung.karaokeapp.network.ApiService;
-import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.network.RetrofitBuilder;
 
 import java.util.List;

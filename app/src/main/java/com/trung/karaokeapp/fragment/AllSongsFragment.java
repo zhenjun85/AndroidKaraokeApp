@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.adapter.AllSongsAdapter;
 import com.trung.karaokeapp.entities.Genre;
 import com.trung.karaokeapp.entities.KaraokeSong;

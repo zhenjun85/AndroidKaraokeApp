@@ -1,10 +1,15 @@
 package com.trung.karaokeapp.network;
 
 import com.trung.karaokeapp.entities.AccessToken;
+import com.trung.karaokeapp.entities.CommentTb;
 import com.trung.karaokeapp.entities.Genre;
+import com.trung.karaokeapp.entities.HasPlaylistKs;
 import com.trung.karaokeapp.entities.KaraokeSong;
+import com.trung.karaokeapp.entities.PhotoTb;
+import com.trung.karaokeapp.entities.Playlist;
 import com.trung.karaokeapp.entities.RecordUserKs;
 import com.trung.karaokeapp.entities.SharedRecord;
+import com.trung.karaokeapp.entities.ToAnnUser;
 import com.trung.karaokeapp.entities.User;
 
 import java.util.List;
@@ -62,7 +67,7 @@ public interface ApiService {
     //update viewNo
     @POST("songs/upview")
     @FormUrlEncoded
-    Call<Boolean> updateViewNo(@Field("ksid") int ksid);
+    Call<Boolean> upViewKs(@Field("ksid") int ksid);
 
     @GET("user/recent")
     Call<List<RecordUserKs>> getRecentSongs();
@@ -77,11 +82,19 @@ public interface ApiService {
     @GET("songs/{id}")
     Call<KaraokeSong> getOne(@Path("id") int id);
 
+    @POST("songs/playlist")
+    @FormUrlEncoded
+    Call<List<HasPlaylistKs>> getPlaylistOfSong(@Field("kar_id") int ksId);
+
+    @POST("songs/report")
+    @FormUrlEncoded
+    Call<Integer> reportKaraokeSong( @Field("kar_id") int ksId, @Field("subject") int subject );
+
     @GET("user")
     Call<User> getUser();
 
-    @GET("user/shared-records")
-    Call<List<SharedRecord>> getSharedRecord();
+    @GET("user/shared-records/{num}")
+    Call<List<SharedRecord>> getSharedRecord(@Path("num") int num);
 
     //Upload file
     @Multipart
@@ -96,6 +109,94 @@ public interface ApiService {
     @GET("record/popular/{num}")
     Call<List<SharedRecord>> getPopularSr(@Path("num") int num);
 
+    @POST("record/islike")
+    @FormUrlEncoded
+    Call<Integer> getIsLike(@Field("sr_id") int srid);
+
+    @POST("record/like")
+    @FormUrlEncoded
+    Call<Integer> likeRecord(@Field("sr_id") int srid);
+
+    @POST("record/comment")
+    @FormUrlEncoded
+    Call<CommentTb> commentRecord(@Field("sr_id") int srid, @Field("content") String content);
+
+    @GET("record/{id}/comments")
+    Call<List<CommentTb>> getCommentsOfSr( @Path("id") int srid );
+
+    @POST("record/report")
+    @FormUrlEncoded
+    Call<Integer> reportSharedRecord( @Field("sr_id") int srId, @Field("subject") int subject );
+
+    @POST("record/upview")
+    @FormUrlEncoded
+    Call<Integer> upViewSr(@Field("sr_id") int srid);
+
     @GET("songs/{id}/rank")
-    Call<List<SharedRecord>> getRank(@Path("id") int id);
+    Call<List<SharedRecord>> getUserRank(@Path("id") int id);
+
+    @GET("playlist/all")
+    Call<List<Playlist>> getAllPlaylist();
+
+    @POST("playlist/add")
+    @FormUrlEncoded
+    Call<Playlist> addPlaylist(@Field("name") String name);
+
+    @POST("playlist/save")
+    @FormUrlEncoded
+    Call<Integer> savePlaylist(@Field("name") String name, @Field("id") int id);
+
+    @POST("playlist/delete")
+    @FormUrlEncoded
+    Call<Integer> deletePlaylist(@Field("id") int id);
+
+    @POST("playlist/songs")
+    @FormUrlEncoded
+    Call<List<HasPlaylistKs>> getSongsInPlaylist(@Field("pl_id") int playlistId);
+
+    @POST("playlist/delsong")
+    @FormUrlEncoded
+    Call<Integer> delSongInPlaylist(@Field("pl_id") int playlistId, @Field("kar_id") int ksId);
+
+    @POST("playlist/addsong")
+    @FormUrlEncoded
+    Call<Integer> addSongToPlaylist(@Field("pl_id") int playlistId, @Field("kar_id") int ksId);
+
+    //FEED
+    @GET("newfeed/{num}")
+    Call<List<SharedRecord>> getNewFeeds( @Path("num") int num );
+
+    @GET("relation/{other_id}")
+    Call<Integer> getRelationStatus(@Path("other_id") int otherId );
+
+    @POST("relation/request")
+    @FormUrlEncoded
+    Call<Integer> requestFriend( @Field("other_id") int otherId );
+
+    @GET("announcement/{num}/{sort}")
+    Call<List<ToAnnUser>> getAnnouncement(@Path( "num" ) int num, @Path("sort") String sort);
+
+    //Upload file
+    @Multipart
+    @POST("photo/upload")
+    Call<ResponseBody> postImage(@Part MultipartBody.Part file, @Part("name") RequestBody name);
+
+    @POST("photo/add")
+    @FormUrlEncoded
+    Call<PhotoTb> addPhoto( @Field("file_name") String fileName );
+
+    @POST("photo/delete")
+    @FormUrlEncoded
+    Call<Integer> delPhoto( @Field("photo_id") int photoId );
+
+    @GET("photo/all")
+    Call<List<PhotoTb>> getAllPhotos();
+
+
+    @POST("user/update-avatar")
+    @FormUrlEncoded
+    Call<Integer> updateUserAvatar( @Field("path") String path );
+
+
+
 }

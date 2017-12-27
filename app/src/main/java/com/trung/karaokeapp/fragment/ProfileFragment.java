@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.activity.DuetManageActivity;
 import com.trung.karaokeapp.activity.FriendActivity;
 import com.trung.karaokeapp.activity.LocalSongsActivity;
@@ -61,8 +60,9 @@ public class ProfileFragment extends Fragment {
 
     TokenManager tokenManager;
     ApiService service;
-    Call<User> callUser;
+    Call<User> callGetUser;
     private User user;
+    private Call<List<SharedRecord>> callGetSharedRecords;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -72,8 +72,8 @@ public class ProfileFragment extends Fragment {
         tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
-        callUser = service.getUser();
-        callUser.enqueue(new Callback<User>() {
+        callGetUser = service.getUser();
+        callGetUser.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Log.d(TAG, response.toString());
@@ -84,13 +84,15 @@ public class ProfileFragment extends Fragment {
                 tvBirthday.setText(user.getBirthday());
                 tvIntroduce.setText(user.getIntroduce());
 
-                if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
-                    Glide.with(getContext()).load(AppURL.baseUrl + "/store/avatar.png").into(ivUserAvatar);
+                if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+                    Glide.with(getContext()).load(AppURL.baseUrlPhotos + "/" + user.getAvatar()).into(ivUserAvatar);
+                }else {
+                    ivUserAvatar.setImageDrawable(getActivity().getDrawable(R.drawable.ic_face_black_48px));
                 }
 
                 //get user record
-                Call<List<SharedRecord>> callSR = service.getSharedRecord();
-                callSR.enqueue(new Callback<List<SharedRecord>>() {
+                callGetSharedRecords = service.getSharedRecord(6);
+                callGetSharedRecords.enqueue(new Callback<List<SharedRecord>>() {
                     @Override
                     public void onResponse(Call<List<SharedRecord>> call, Response<List<SharedRecord>> response) {
                         Log.d(TAG, response.toString());

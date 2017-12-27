@@ -1,6 +1,7 @@
 package com.trung.karaokeapp.network;
 
-import com.trung.karaokeapp.TokenManager;
+import android.util.Log;
+
 import com.trung.karaokeapp.entities.AccessToken;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class CustomAuthenticator implements Authenticator {
     public Request authenticate(Route route, Response response) throws IOException {
 
         if(responseCount(response) >= 3){
+            tokenManager.deleteToken();
             return null;
         }
 
@@ -59,6 +61,7 @@ public class CustomAuthenticator implements Authenticator {
         int result = 1;
         while ((response = response.priorResponse()) != null) {
             result++;
+            Log.d("result count ", result + "");
         }
         return result;
     }

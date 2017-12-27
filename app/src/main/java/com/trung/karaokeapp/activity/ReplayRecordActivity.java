@@ -12,15 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
-import com.trung.karaokeapp.Utils;
+import com.trung.karaokeapp.network.TokenManager;
+import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.libffmpeg.ExecuteBinaryResponseHandler;
 import com.trung.karaokeapp.libffmpeg.FFmpeg;
@@ -51,6 +54,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnPlay) ImageButton btnPlay;
     @BindView(R.id.seekBarSong) SeekBar seekBar;
+    @BindView(R.id.videoView) VideoView videoView;
 
     private String record;
     private String beat;
@@ -59,9 +63,10 @@ public class ReplayRecordActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private MediaPlayer mediaPlayerForRecord;
 
-    boolean fromUser = false;
     private FFmpeg ffmpeg;
-    private String mp3Record;
+    private String output;
+    private boolean isVideo = false;
+
 
     TokenManager tokenManager;
     ApiService service;
@@ -71,9 +76,10 @@ public class ReplayRecordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replay_record);
         ButterKnife.bind(this);
-
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", Context.MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //keep screen awake
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         //get from Intent
         String songJson = getIntent().getStringExtra("song");
@@ -82,9 +88,20 @@ public class ReplayRecordActivity extends AppCompatActivity {
         beat = getIntent().getStringExtra("beat");
         lyric = getIntent().getStringExtra("lyric");
 
+        //videoView show or hide
+        String exFile = record.substring( record.length() - 4 );
+        Log.d( TAG, "__" + exFile );
+        if (exFile.equals(".3gp")){
+            videoView.setVisibility(View.GONE);
+        }else {
+            //video
+            isVideo = true;
+
+        }
+
         toolbar.setTitle(songKar.getName());
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // //Load FFmpeg Library
@@ -95,8 +112,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
         tvSongName.setText(songKar.getName());
         tvGenre.setText(String.format("Genre: %s", songKar.getGenre()));
 
-        //region mediaaaa
-
+        //media
         mediaPlayer = new MediaPlayer();
         mediaPlayerForRecord = new MediaPlayer();
         try {
@@ -104,6 +120,8 @@ public class ReplayRecordActivity extends AppCompatActivity {
             mediaPlayerForRecord.setDataSource(record);
             mediaPlayer.prepare();
             mediaPlayerForRecord.prepare();
+
+            videoView.setVideoPath( record );
 
             tvSongTime.setText(String.format("Time: %s", Utils.convertTimeMsToMMSS(mediaPlayerForRecord.getDuration())));
             tvDuration.setText(Utils.convertTimeMsToMMSS(mediaPlayerForRecord.getDuration()));
@@ -115,6 +133,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
                     if (b) {
                         mediaPlayerForRecord.seekTo(i);
                         mediaPlayer.seekTo(i);
+                        videoView.seekTo(i);
                     }
                 }
 
@@ -132,13 +151,14 @@ public class ReplayRecordActivity extends AppCompatActivity {
             mediaPlayerForRecord.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer__) {
+                    hasStopped = true;
                     playing = false;
-                    mediaPlayer.seekTo(0);
                     mediaPlayer.pause();
-                    mediaPlayerForRecord.seekTo(0);
                     mediaPlayerForRecord.pause();
-                    handler.removeCallbacks(playRunable);
+                    videoView.pause();
 
+                    handler.removeCallbacks(playRunable);
+                    //UI
                     seekBar.setProgress(0);
                     tvCurrentTime.setText("00:00");
                     btnPlay.setImageDrawable(getDrawable(R.drawable.ic_play_button));
@@ -155,8 +175,15 @@ public class ReplayRecordActivity extends AppCompatActivity {
     void btnPlayRecord() {
         if (playing) {
             pauseMix();
+            videoView.pause();
         }else {
+            if (hasStopped){
+                mediaPlayer.seekTo(0);
+                mediaPlayerForRecord.seekTo(0);
+                videoView.seekTo(0);
+            }
             startMix();
+            videoView.start();
         }
         playing = !playing;
     }
@@ -165,8 +192,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
         btnPlay.setImageDrawable(getDrawable(R.drawable.ic_pause_round));
         mediaPlayer.start();
         mediaPlayerForRecord.start();
-
-        thread.run();
+        playRunable.run();
     }
 
     private void pauseMix() {
@@ -179,9 +205,9 @@ public class ReplayRecordActivity extends AppCompatActivity {
 
     //Playing
     boolean playing = false;
+    boolean hasStopped = false;
     Handler handler = new Handler();
     PlayRunable playRunable = new PlayRunable();
-    Thread thread = new Thread(playRunable);
 
     class PlayRunable implements Runnable {
         @Override
@@ -194,68 +220,69 @@ public class ReplayRecordActivity extends AppCompatActivity {
             handler.postDelayed(playRunable, 500);
         }
     }
+
+    String[] getCommand() {
+        ArrayList<String> comm = null;
+        //String cmd = "-y -i " + beat + " -i " + record + " -filter_complex amix=inputs=2:duration=shortest -ac 2 -c:a libmp3lame -q:a 2 " + output;
+        String duration = tvDuration.getText().toString().replace(":", "-");
+        if (!isVideo) {
+            //audio 3gp
+            output = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp3";
+            comm = new ArrayList<>();
+            comm.add("-y");
+            comm.add("-i");
+            comm.add(beat);
+            comm.add("-i");
+            comm.add(record);
+            comm.add("-filter_complex");
+            comm.add("amix=inputs=2:duration=shortest");
+            comm.add("-ac");
+            comm.add("2");
+            comm.add("-c:a");
+            comm.add("libmp3lame");
+            comm.add("-q:a");
+            comm.add("2");
+            comm.add(output);
+        }else {
+            //video mp4
+            output = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp4";
+            comm = new ArrayList<>();
+            comm.add("-y");
+            comm.add("-i");
+            comm.add(beat);
+            comm.add("-i");
+            comm.add(record);
+            comm.add("-shortest");
+            comm.add(output);
+        }
+
+        return comm.toArray(new String[comm.size()]);
+
+    }
+
     @OnClick(R.id.btnPostRecord)
     void postRecord() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("abccc");
+        builder.setMessage("Start merging beat and mic files...");
         builder.setCancelable(false);
-
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
-//        String cmd = "-y -i " + beat + " -i " + record + " -filter_complex amix=inputs=2:duration=shortest -ac 2 -c:a libmp3lame -q:a 2 " + output;
-        String duration = tvDuration.getText().toString().replace(":", "-");
-        mp3Record = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp3";
-        ArrayList<String> comm = new ArrayList<>();
-        comm.add("-y");
-        comm.add("-i");
-        comm.add(beat);
-        comm.add("-i");
-        comm.add(record);
-        comm.add("-filter_complex");
-        comm.add("amix=inputs=2:duration=shortest");
-        comm.add("-ac");
-        comm.add("2");
-        comm.add("-c:a");
-        comm.add("libmp3lame");
-        comm.add("-q:a");
-        comm.add("2");
-        comm.add(mp3Record);
-        String[] command = comm.toArray(new String[comm.size()]);
+        String[] command = getCommand();
         execFFmpegBinary(command, alertDialog, true);
     }
 
     @OnClick(R.id.btnSaveRecord)
     void saveRecord() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("abccc");
+        builder.setMessage("Start merging beat and mic files...");
         builder.setCancelable(false);
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
-//        String cmd = "-y -i " + beat + " -i " + record + " -filter_complex amix=inputs=2:duration=shortest -ac 2 -c:a libmp3lame -q:a 2 " + output;
-        String duration = tvDuration.getText().toString().replace(":", "-");
-        mp3Record = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp3";
-        ArrayList<String> comm = new ArrayList<>();
-        comm.add("-y");
-        comm.add("-i");
-        comm.add(beat);
-        comm.add("-i");
-        comm.add(record);
-        comm.add("-filter_complex");
-        comm.add("amix=inputs=2:duration=shortest");
-        comm.add("-ac");
-        comm.add("2");
-        comm.add("-c:a");
-        comm.add("libmp3lame");
-        comm.add("-q:a");
-        comm.add("2");
-        comm.add(mp3Record);
-        String[] command = comm.toArray(new String[comm.size()]);
-
+        String[] command = getCommand();
         execFFmpegBinary(command, alertDialog, false);
-
     }
     //FFMPEG
     private void loadFFMpegBinary() {
@@ -272,7 +299,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
     }
     private void execFFmpegBinary(final String[] command, final AlertDialog alertDialog, final boolean isPost) {
         //update viewNo
-        Call<Boolean> call = service.updateViewNo(songKar.getId());
+        Call<Boolean> call = service.upViewKs(songKar.getId());
         call.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
@@ -323,7 +350,8 @@ public class ReplayRecordActivity extends AppCompatActivity {
                     }else {
                         Intent intent = new Intent(ReplayRecordActivity.this, PostRecordActivity.class);
                         intent.putExtra("song", getIntent().getStringExtra("song"));
-                        intent.putExtra("record", mp3Record);
+                        intent.putExtra("record", output);
+                        intent.putExtra("isVideo", isVideo);
                         startActivity(intent);
                         finish();
                     }
@@ -412,6 +440,10 @@ public class ReplayRecordActivity extends AppCompatActivity {
         }
         mediaPlayer.release();
         mediaPlayerForRecord.release();
+        if (videoView.isPlaying()){
+            videoView.stopPlayback();
+            videoView = null;
+        }
     }
 
     @Override

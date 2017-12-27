@@ -1,33 +1,39 @@
 package com.trung.karaokeapp.activity;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.Utils;
+import com.trung.karaokeapp.network.ApiService;
+import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
+import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.appclass.Line;
 import com.trung.karaokeapp.appclass.LyricFile;
 import com.trung.karaokeapp.appclass.Note;
@@ -42,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +58,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecordActivity extends AppCompatActivity {
     private static final String TAG = "RecordActivity";
@@ -77,27 +87,31 @@ public class RecordActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private MediaRecorder mediaAudioRecorder;
     boolean playing = false;
-    boolean hasStopped = false;
 
     Handler handler;
     PlayingRunable playingRunable;
-    private KaraokeSong songKaraokeSong;
+    private KaraokeSong karaokeSong;
+    private TokenManager tokenManager;
+    private ApiService service;
+    private CharSequence[] items;
+    private int checkedItem = 0;
+    private Call<Integer> callReportKaraokeSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
         ButterKnife.bind(this);
-
+        tokenManager = TokenManager.getInstance( getSharedPreferences("prefs", Context.MODE_PRIVATE));
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+        //keep screen awake
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //init
         recordViewModel = ViewModelProviders.of(RecordActivity.this).get(RecordViewModel.class);
         handler = new Handler();
         playingRunable = new PlayingRunable();
 
-        //textStatus
-//        tvStatus.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
-
-        //clear linear layout container
+        //clear all views in linear layout container
         llLyricContainer.removeAllViews();
 
         //change Color
@@ -105,16 +119,13 @@ public class RecordActivity extends AppCompatActivity {
 
         //SongInfo Receive
         String songJsonText = getIntent().getStringExtra("song");
-        songKaraokeSong = new Gson().fromJson(songJsonText, KaraokeSong.class);
+        karaokeSong = new Gson().fromJson(songJsonText, KaraokeSong.class);
 
-
-
-        //update songInfo to activity
-        tvSongName.setText(songKaraokeSong.getName());
-        tvGenre.setText(String.format("Genre: %s", songKaraokeSong.getGenre()));
-        //load Imagecover
-        String folderSong =  AppURL.baseUrlSongAndLyric + "/" + songKaraokeSong.getBeat().substring(0, songKaraokeSong.getBeat().length() - 4);
-        Glide.with(RecordActivity.this).load(folderSong + "/" + songKaraokeSong.getImage()).into(ivCoverSong);
+        //load songInfo to activity
+        tvSongName.setText(karaokeSong.getName());
+        tvGenre.setText(String.format("Genre: %s", karaokeSong.getGenre()));
+        String folderSong =  AppURL.baseUrlSongAndLyric + "/" + karaokeSong.getBeat().substring(0, karaokeSong.getBeat().length() - 4);
+        Glide.with(RecordActivity.this).load(folderSong + "/" + karaokeSong.getImage()).into(ivCoverSong);
 
         //media
         mediaPlayer = new MediaPlayer();
@@ -123,10 +134,10 @@ public class RecordActivity extends AppCompatActivity {
         mediaAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
 
+        //url
+        String urlBeat = folderSong + "/" + karaokeSong.getBeat();
+        String urlLyric = folderSong + "/" + karaokeSong.getLyric();
 
-        //prepare url
-        String urlBeat = folderSong + "/" + songKaraokeSong.getBeat();
-        String urlLyric = folderSong + "/" + songKaraokeSong.getLyric();
         //1. Download Beat and Lyric
         new DownloadFileFromURL().execute(urlLyric, urlBeat);
 
@@ -137,12 +148,12 @@ public class RecordActivity extends AppCompatActivity {
                 if (aBoolean) {
                     lyricFile = Utils.openSongFile(urlLyricOnDevice);
                     gap = lyricFile.gap;
-                    lyricSize = lyricFile.allLines.size();
+                    lyricLength = lyricFile.allLines.size();
 
-                    final String recordName = getRecordName(songKaraokeSong);
-                    String pathRecord = Environment.getExternalStorageDirectory() + "/" + AppURL.baseRecordsFolder;
+                    String recordName = getRecordName(karaokeSong);
+                    String folderRecord = Environment.getExternalStorageDirectory() + "/" + AppURL.baseRecordsFolder;
 
-                    File file = new File(pathRecord);
+                    File file = new File(folderRecord);
                     if (!file.exists()){
                         if (!file.mkdirs()){
                             Log.e(TAG, "Record hasn't been created.");
@@ -150,17 +161,18 @@ public class RecordActivity extends AppCompatActivity {
                             return;
                         }
                     }
-                    recordOnDevice = pathRecord + "/" + recordName;
+                    recordOnDevice = folderRecord + "/" + recordName;
                     mediaAudioRecorder.setOutputFile( recordOnDevice );
                     try {
                         mediaPlayer.setDataSource(urlBeatOnDevice);
                         mediaPlayer.prepare();
                         mediaAudioRecorder.prepare();
-                        //set Duration
+
+                        //UI
                         tvSongDuration.setText(String.format("Time: %s", Utils.convertTimeMsToMMSS(mediaPlayer.getDuration())));
                         progressBarTop.setMax(mediaPlayer.getDuration());
 
-                        //compete listener
+                        //Media Listener
                         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                             @Override
                             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -171,7 +183,6 @@ public class RecordActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     Log.d(TAG, "isReady");
-
                 }
             }
         });
@@ -179,8 +190,63 @@ public class RecordActivity extends AppCompatActivity {
 
     private String getRecordName(KaraokeSong songKaraokeSong) {
         String createdAt = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
-        String recordName = songKaraokeSong.getId() + "_" + songKaraokeSong.getName() + "_" + createdAt + "_raw.3gp";
+        String recordName = songKaraokeSong.getId() + "_" + songKaraokeSong.getName() + "_" + createdAt + ".3gp";
         return recordName;
+    }
+
+    @OnClick(R.id.btnReportSong)
+    void reportKaraokeSong() {
+       /*
+       * 0: wrong lyrics
+       * 1: low sound
+       * 2: asynchronous lyrics and music
+       * 3:
+       * */
+        items = new CharSequence[]{ "Wrong lyric", "Low sound", "Asynchronous lyrics and music" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
+        builder.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                checkedItem = i;
+            }
+        }).setPositiveButton("Report", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                callReportKaraokeSong = service.reportKaraokeSong( karaokeSong.getId(), checkedItem );
+                callReportKaraokeSong.enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        Log.d(TAG, response.toString());
+                        int result = response.body();
+                        if (result == 1){
+                            Toast.makeText(RecordActivity.this, "Report success!", Toast.LENGTH_SHORT).show();
+                        }else if (result == 2) {
+                            Toast.makeText(RecordActivity.this, "Report has existed!", Toast.LENGTH_SHORT).show();
+                        }else if (result == 3){
+                            Toast.makeText(RecordActivity.this, "Report is updated!", Toast.LENGTH_SHORT).show();
+                        }else {
+                            //result == 0
+                            Toast.makeText(RecordActivity.this, "Report fail!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable t) {
+                        Log.d(TAG, t.getMessage());
+                    }
+                });
+
+            }
+        });
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+            }
+        });
+        alertDialog.show();
     }
 
     @OnClick(R.id.btnRecordSong)
@@ -192,7 +258,6 @@ public class RecordActivity extends AppCompatActivity {
             }
             else {
                 //stop
-                hasStopped = true;
                 stopAudio();
                 stopRecordMic();
                 stop();
@@ -202,7 +267,11 @@ public class RecordActivity extends AppCompatActivity {
     }
     @OnClick(R.id.btnResetSong)
     void reset() {
-        if (playing && !hasStopped) {
+        if (playing) {
+            handler.removeCallbacks(playingRunable);
+            mediaPlayer.pause();
+            mediaAudioRecorder.reset();
+
             playing = false;
             btnRecordSong.setImageDrawable(getDrawable(R.drawable.ic_voice_recorder));
             progressBarTop.setProgress(0);
@@ -220,11 +289,6 @@ public class RecordActivity extends AppCompatActivity {
             listTextViewRunning = new ArrayList<>();
             listTextViewWidth = new ArrayList<>();
 
-            handler.removeCallbacks(playingRunable);
-            mediaPlayer.seekTo(0);
-            mediaPlayer.pause();
-
-            mediaAudioRecorder.reset();
             //delete old file
             File oldFile = new File(recordOnDevice);
             if (oldFile.exists()){
@@ -234,8 +298,8 @@ public class RecordActivity extends AppCompatActivity {
             mediaAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mediaAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-            mediaAudioRecorder.setOutputFile(recordOnDevice);
             try {
+                mediaAudioRecorder.setOutputFile(recordOnDevice);
                 mediaAudioRecorder.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -254,6 +318,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void playAudio() {
+        mediaPlayer.seekTo(0);
         mediaPlayer.start();
         playingRunable.run();
 
@@ -275,17 +340,8 @@ public class RecordActivity extends AppCompatActivity {
         tvStatus.setText("Stoped");
         progressBarTop.setProgress(0);
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void resumeRecordMic() {
-        mediaAudioRecorder.resume();
-    }
-
     private void startRecordMic() {
         mediaAudioRecorder.start();
-    }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void pauseRecordMic() {
-        mediaAudioRecorder.pause();
     }
     private void stopRecordMic() {
         mediaAudioRecorder.stop();
@@ -301,10 +357,9 @@ public class RecordActivity extends AppCompatActivity {
     int currentNote = 0;
     int currentWidth = 0;
     int gap = 0;
-    int lyricSize = 0;
+    int lyricLength = 0;
     List<TextView> listTextViewRunning = new ArrayList<>();
     List<Integer> listTextViewWidth = new ArrayList<>();
-
 
     private class PlayingRunable implements Runnable {
         @Override
@@ -324,7 +379,7 @@ public class RecordActivity extends AppCompatActivity {
 
             currentTime -= gap;
 
-            if (currentLineToRun < lyricSize) {
+            if (currentLineToRun < lyricLength) {
                 Line line = lyricFile.allLines.get(currentLineToRun);
                 if ( line.start < currentTime && currentTime < line.end ) {
                     float measureOfWord = listTextViewWidth.get(currentLineToRun) / line.lyric.length();
@@ -363,10 +418,10 @@ public class RecordActivity extends AppCompatActivity {
                 }
             }
 
-            if (currentLine < lyricSize) {
+            if (currentLine < lyricLength) {
                 Line line = lyricFile.allLines.get(currentLine);
                 if ( line.start < currentTime && currentTime < line.end ) {
-                    if (currentLineToShow < lyricSize){
+                    if (currentLineToShow < lyricLength){
                         addCurrentLineToContainer(currentLineToShow++ , (line.end - line.start) / 2);
                     }
                     currentLine++;
@@ -401,43 +456,19 @@ public class RecordActivity extends AppCompatActivity {
         llLyricContainer.addView(view);
         scrollView.postDelayed(scrollRunable, (long) timeDelay);
     }
-    public String downloadFile(String urlPath) {
-        InputStream in = null;
-        try {
-            String fileName = urlPath.substring(urlPath.lastIndexOf("/") + 1);
 
-            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/app_karaoke/songs");
-            if (!file.exists()) {
-                if (!file.mkdirs()){
-                    Log.d(TAG, "FolderNotFound");
-                }
-            }
+    //download file beat and lyric
+    class PercentRunnable implements Runnable {
+        public String percent = "";
 
-            URL url = new URL(urlPath.replace(" ", "%20"));
-            URLConnection connection = url.openConnection();
-            connection.connect();
-
-            in = new BufferedInputStream(connection.getInputStream(), 8192);
-
-            FileOutputStream fos = new FileOutputStream(file.getPath() + "/" + fileName );
-
-            byte[] buffer = new byte[1024];
-            int len1 = 0;
-            while ((len1 = in.read(buffer)) != -1) {
-                fos.write(buffer, 0, len1);
-            }
-            fos.flush();
-            fos.close();
-            in.close();
-            return file.getPath() + "/" + fileName;
-        } catch (IOException e) {
-            e.printStackTrace();
+        @Override
+        public void run() {
+            tvStatus.setText(String.format("Load... %s", percent));
         }
-
-        return null;
     }
 
-    private class DownloadFileFromURL extends AsyncTask<String, String[], String[]> {
+    private class DownloadFileFromURL extends AsyncTask<String, String, String[]> {
+        PercentRunnable runnable = new PercentRunnable();
 
         @Override
         protected void onPreExecute() {
@@ -450,11 +481,54 @@ public class RecordActivity extends AppCompatActivity {
             String res[] = new String[strings.length];
             int i = 0;
             for (String urlPath: strings) {
-                res[i++] = downloadFile(urlPath);
-                Log.d(TAG, urlPath);
+                InputStream in = null;
+                try {
+                    String fileName = urlPath.substring(urlPath.lastIndexOf("/") + 1);
+
+                    File file = new File(Environment.getExternalStorageDirectory().getPath() + "/app_karaoke/songs");
+                    if (!file.exists()) {
+                        if (!file.mkdirs()){
+                            Log.d(TAG, "FolderNotFound");
+                        }
+                    }
+
+                    URL url = new URL(urlPath.replace(" ", "%20"));
+                    URLConnection connection = url.openConnection();
+                    connection.connect();
+
+                    in = new BufferedInputStream(connection.getInputStream(), 8192);
+                    FileOutputStream fos = new FileOutputStream(file.getPath() + "/" + fileName );
+                    res[i++] = file.getPath() + "/" + fileName;
+
+                    byte[] buffer = new byte[1024];
+                    int read = 0;
+                    int total = 0;
+                    int totalSize = connection.getContentLength();
+                    Log.d(TAG, totalSize + "");
+                    DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+                    decimalFormat.setMaximumFractionDigits(2);
+
+                    while ((read = in.read(buffer)) != -1) {
+                        fos.write(buffer, 0, read);
+                        total += read;
+                        publishProgress( decimalFormat.format(total * 100f / totalSize ) );
+                    }
+                    fos.flush();
+                    fos.close();
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return res;
         }
+
+        @Override
+        protected void onProgressUpdate(final String... values) {
+            runnable.percent = values[0];
+            runOnUiThread( runnable );
+        }
+
         @Override
         protected void onPostExecute(String[] s) {
             Log.d(TAG, "Download completely!" ) ;
@@ -476,5 +550,10 @@ public class RecordActivity extends AppCompatActivity {
         handler.removeCallbacks(playingRunable);
         mediaPlayer.release();
         mediaAudioRecorder.release();
+
+        if (callReportKaraokeSong != null){
+            callReportKaraokeSong.cancel();
+            callReportKaraokeSong = null;
+        }
     }
 }

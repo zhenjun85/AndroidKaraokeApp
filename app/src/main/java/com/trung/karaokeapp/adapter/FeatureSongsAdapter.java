@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -52,6 +51,7 @@ public class FeatureSongsAdapter extends RecyclerView.Adapter<FeatureSongsAdapte
             public void onClick(View view) {
                 Intent intent = new Intent(context, SongDetailActivity.class);
                 intent.putExtra("song", new Gson().toJson(song));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

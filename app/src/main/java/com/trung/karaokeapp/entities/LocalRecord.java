@@ -11,14 +11,24 @@ public class LocalRecord {
     String duration;
     int score;
     String path;
+    String type;
 
-    public LocalRecord(int ksid, String name, String size, String duration, int score, String path) {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public LocalRecord(int ksid, String name, String size, String duration, int score, String path, String type) {
         this.ksid = ksid;
         this.name = name;
         this.size = size;
         this.duration = duration;
         this.score = score;
         this.path = path;
+        this.type = type;
     }
 
     public String getPath() {

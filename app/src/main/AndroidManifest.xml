@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MyApplication"
@@ -73,7 +74,8 @@
         <activity android:name=".activity.ReplayRecordActivity" />
         <activity android:name=".activity.PostRecordActivity" />
         <activity android:name=".activity.SeeMoreSongsActivity" />
-        <activity android:name=".activity.SeeMorePopularSrActivity"></activity>
+        <activity android:name=".activity.SeeMorePopularSrActivity" />
+        <activity android:name=".activity.SrDetailActivity"></activity>
     </application>
 
 </manifest>

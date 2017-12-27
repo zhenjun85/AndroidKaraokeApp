@@ -23,6 +23,29 @@ public class SharedRecord {
     int karId;
     KaraokeSong karaoke;
     User user;
+
+    @Json(name = "num_likes")
+    int numLikes;
+
+    @Json(name = "num_comments")
+    int numComments;
+
+    public int getNumLikes() {
+        return numLikes;
+    }
+
+    public void setNumLikes(int numLikes) {
+        this.numLikes = numLikes;
+    }
+
+    public int getNumComments() {
+        return numComments;
+    }
+
+    public void setNumComments(int numComments) {
+        this.numComments = numComments;
+    }
+
     public KaraokeSong getKaraoke() {
         return karaoke;
     }
@@ -38,8 +61,6 @@ public class SharedRecord {
     public void setUser(User user) {
         this.user = user;
     }
-
-
 
     public int getId() {
         return id;

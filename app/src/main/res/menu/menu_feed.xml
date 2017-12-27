@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/mn_findfriends"
-        android:icon="@drawable/ic_person_add_black_24dp"
+        android:icon="@drawable/ic_person_add"
         android:title="Find Friend"
         app:showAsAction="always" />
 </menu>

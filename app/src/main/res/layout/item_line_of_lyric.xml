@@ -13,7 +13,7 @@
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/textViewRunning"
-        android:textColor="#d1d"
+        android:textColor="#bd1f69c4"
         android:textSize="18sp"
         android:ellipsize="none"
         android:singleLine="true"

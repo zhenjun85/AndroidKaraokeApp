@@ -104,7 +104,7 @@
                     <android.support.constraint.ConstraintLayout
                         android:id="@+id/btn_record"
                         android:clickable="true"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
@@ -121,9 +121,10 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:src="@android:drawable/presence_audio_away" />
+                                android:layout_gravity="center"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:src="@drawable/ic_microphone" />
 
                         </android.support.v7.widget.CardView>
 
@@ -142,7 +143,7 @@
                     <android.support.constraint.ConstraintLayout
                         android:id="@+id/btn_duet_open"
                         android:clickable="true"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
@@ -159,9 +160,10 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:src="@drawable/ic_face_black_48px" />
+                                android:layout_gravity="center"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:src="@drawable/ic_duet" />
 
                         </android.support.v7.widget.CardView>
 
@@ -180,7 +182,7 @@
                     <android.support.constraint.ConstraintLayout
                         android:id="@+id/btn_video_open"
                         android:clickable="true"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
@@ -197,9 +199,10 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:src="@android:drawable/presence_video_busy" />
+                                android:layout_gravity="center"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:src="@drawable/ic_video_camera" />
                         </android.support.v7.widget.CardView>
 
                         <TextView
@@ -229,6 +232,7 @@
                         android:layout_height="wrap_content"
                         android:text="User rankings"
                         android:textColor="#433f4a"
+                        android:textStyle="bold"
                         android:textSize="18sp" />
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rvRanking"

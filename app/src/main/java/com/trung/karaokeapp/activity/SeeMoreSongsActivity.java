@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.adapter.AllSongsAdapter;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.network.ApiService;
@@ -31,8 +31,7 @@ public class SeeMoreSongsActivity extends AppCompatActivity {
     ApiService service;
     Call<List<KaraokeSong>> call;
 
-    @BindView(R.id.rvSongs)
-    RecyclerView rvSongs;
+    @BindView(R.id.rvSongs) RecyclerView rvSongs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,5 +87,14 @@ public class SeeMoreSongsActivity extends AppCompatActivity {
             default:break;
         }
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (call != null){
+            call.cancel();
+            call = null;
+        }
     }
 }

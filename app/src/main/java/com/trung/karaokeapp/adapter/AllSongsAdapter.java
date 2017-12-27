@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.Utils;
+import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.activity.SongDetailActivity;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.network.AppURL;
@@ -54,7 +54,7 @@ public class AllSongsAdapter extends RecyclerView.Adapter<AllSongsAdapter.MyView
 
 
         if (Utils.dayBetweenPastAndNow(song.getCreatedAt()) <= 7) {
-            Drawable leftDrawable = context.getResources().getDrawable(R.drawable.ic_stars_black_24dp);
+            Drawable leftDrawable = context.getResources().getDrawable(R.drawable.ic_stars_black);
             holder.tvSinger.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null);
         }
         else {
@@ -70,6 +70,7 @@ public class AllSongsAdapter extends RecyclerView.Adapter<AllSongsAdapter.MyView
             public void onClick(View view) {
                 Log.d("onlccc", "1");
                 Intent intent = new Intent(context, SongDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 String songJson = new Gson().toJson(song);
                 intent.putExtra("song", songJson);
                 context.startActivity(intent);

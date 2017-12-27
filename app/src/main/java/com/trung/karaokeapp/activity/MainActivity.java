@@ -2,8 +2,8 @@ package com.trung.karaokeapp.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -15,7 +15,8 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
+import com.trung.karaokeapp.network.AppURL;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.fragment.FeedFragment;
 import com.trung.karaokeapp.fragment.HomeFragment;
 import com.trung.karaokeapp.fragment.NotificationFragment;
@@ -23,14 +24,13 @@ import com.trung.karaokeapp.fragment.ProfileFragment;
 import com.trung.karaokeapp.fragment.SongBookFragment;
 import com.trung.karaokeapp.viewmodel.MainActivityViewModel;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-implements
-        SongBookFragment.OnFragmentInteractionListener,
-        FeedFragment.OnFragmentInteractionListener,
-        NotificationFragment.OnFragmentInteractionListener
+implements SongBookFragment.OnFragmentInteractionListener
 {
     @BindView(R.id.navigation) BottomNavigationView bottomNavigation;
 
@@ -47,13 +47,8 @@ implements
         //prepare
         fragmentManager = getSupportFragmentManager();
         activityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
-        if (tokenManager.getToken().getAccessToken() == null) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-        }
-
+        checkToken();
 
         //assign HomeFragment for first load application
         activityViewModel.homeFragment = new HomeFragment();
@@ -63,10 +58,20 @@ implements
         subcribeBottomNavEvent();
     }
 
+    private void checkToken(){
+        if (tokenManager.getToken().getAccessToken() == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
+
     private void subcribeBottomNavEvent() {
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                //check token
+                checkToken();
+
                 Fragment fragment = null;
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
@@ -114,9 +119,18 @@ implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (tokenManager.getToken().getAccessToken() == null) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+        checkToken();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        File file = new File(Environment.getExternalStorageDirectory() + "/" + AppURL.baseSongsFolder);
+        if (file.exists()) {
+            File[] fileList  = file.listFiles();
+            for ( File tmpFile: fileList ){
+                tmpFile.delete();
+            }
         }
     }
 

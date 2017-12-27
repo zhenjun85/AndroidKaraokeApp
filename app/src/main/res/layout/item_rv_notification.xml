@@ -6,31 +6,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ivAnnLogo"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/common_google_signin_btn_icon_dark_normal" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvAnnContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="false"
-        android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/imageView"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/ivAnnLogo"
         android:text="Welcome to your notification! " />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tvCreateAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="false"
-        android:layout_below="@+id/textView2"
-        android:layout_marginLeft="8dp"
+        android:layout_below="@+id/tvAnnContent"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_toEndOf="@+id/imageView"
+        android:layout_toEndOf="@+id/ivAnnLogo"
         android:text="Aug 12"
         android:textColor="#FFB8B8B8" />
 </RelativeLayout>

@@ -1,8 +1,6 @@
 package com.trung.karaokeapp.network;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.trung.karaokeapp.BuildConfig;
-import com.trung.karaokeapp.TokenManager;
 
 import java.io.IOException;
 

@@ -16,25 +16,18 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
-import com.trung.karaokeapp.Utils;
+import com.trung.karaokeapp.activity.LoginActivity;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.activity.SeeMorePopularSrActivity;
 import com.trung.karaokeapp.activity.SeeMoreSongsActivity;
-import com.trung.karaokeapp.adapter.AllSongsAdapter;
 import com.trung.karaokeapp.adapter.FeatureSongsAdapter;
 import com.trung.karaokeapp.adapter.NewSongsAdapter;
 import com.trung.karaokeapp.adapter.PopularSrAdapter;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.network.ApiService;
-import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.network.RetrofitBuilder;
 
 import java.util.List;
@@ -58,9 +51,13 @@ public class HomeFragment extends Fragment {
     Call<List<KaraokeSong>> callFeatureSongs;
     FeatureSongsAdapter adapterFeatureSongs;
 
+    Call<List<SharedRecord>> callPopularSR;
+    private PopularSrAdapter adapterPopularSr;
+
     @BindView(R.id.rvNewSongs) RecyclerView rvNewSongs;
     @BindView(R.id.rvFeatureSongs) RecyclerView rvFeatureSongs;
     @BindView(R.id.rvPopularSr)RecyclerView rvPopularSr;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +72,34 @@ public class HomeFragment extends Fragment {
 
         getNewSongs();
         return view;
+    }
+    private void getNewSongs() {
+        callNewSongs = service.getNewSongs(5);
+        callNewSongs.enqueue(new Callback<List<KaraokeSong>>() {
+            @Override
+            public void onResponse(Call<List<KaraokeSong>> call, Response<List<KaraokeSong>> response) {
+                Log.d("response", response.toString());
+
+                //Unauthorized 401
+                if (response.code() == 401) {
+                    tokenManager.deleteToken();
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+
+                if (response.isSuccessful()) {
+                    adapterNewSongs = new NewSongsAdapter(response.body(), getContext());
+                    rvNewSongs.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                    rvNewSongs.setAdapter(adapterNewSongs);
+                    getFeatureSongs();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<KaraokeSong>> call, Throwable t) {
+                Log.d(TAG, "failure" + t.getMessage());
+            }
+        });
     }
 
     private void getFeatureSongs() {
@@ -100,16 +125,16 @@ public class HomeFragment extends Fragment {
 
     private void getPopularSharedRecords() {
         //get user record
-        Call<List<SharedRecord>> callSR = service.getPopularSr(5);
-        callSR.enqueue(new Callback<List<SharedRecord>>() {
+        callPopularSR = service.getPopularSr(6);
+        callPopularSR.enqueue(new Callback<List<SharedRecord>>() {
             @Override
             public void onResponse(Call<List<SharedRecord>> call, Response<List<SharedRecord>> response) {
                 Log.d(TAG, response.toString());
 
                 //GridView
                 rvPopularSr.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                PopularSrAdapter myAdapter = new PopularSrAdapter(getContext(), response.body());
-                rvPopularSr.setAdapter(myAdapter);
+                adapterPopularSr = new PopularSrAdapter(getContext(), response.body());
+                rvPopularSr.setAdapter(adapterPopularSr);
             }
 
             @Override
@@ -119,53 +144,16 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void getNewSongs() {
-        callNewSongs = service.getNewSongs(5);
-        callNewSongs.enqueue(new Callback<List<KaraokeSong>>() {
-            @Override
-            public void onResponse(Call<List<KaraokeSong>> call, Response<List<KaraokeSong>> response) {
-                Log.d("response", response.toString());
-                if (response.isSuccessful()) {
-                    adapterNewSongs = new NewSongsAdapter(response.body(), getContext());
-                    rvNewSongs.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                    rvNewSongs.setAdapter(adapterNewSongs);
-                    getFeatureSongs();
-
-                }
-            }
-            @Override
-            public void onFailure(Call<List<KaraokeSong>> call, Throwable t) {
-                Log.d(TAG, "failure" + t.getMessage());
-            }
-        });
-    }
-
     private void setUpToolBar(Toolbar toolbar) {
         toolbar.setTitle(R.string.title_home);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.inflateMenu(R.menu.menu_home);
-
         Menu menu = toolbar.getMenu();
-
-        final SearchView searchView = (SearchView) menu.findItem(R.id.mn_search).getActionView();
-        //change icon search view
+        SearchView searchView = (SearchView) menu.findItem(R.id.mn_search).getActionView();
+       /* //change icon search view
         int searchImgId = android.support.v7.appcompat.R.id.search_button; // I used the explicit layout ID of searchview's ImageView
         ImageView v = (ImageView) searchView.findViewById(searchImgId);
-        v.setImageResource(R.drawable.ic_search_black_24dp);
-
-        searchView.setQueryHint("hihi");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.d("searchclick", "1");
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+        v.setImageResource(R.drawable.ic_search);*/
     }
 
     @OnClick(R.id.btnSeeMorePopularSR)
@@ -177,6 +165,7 @@ public class HomeFragment extends Fragment {
     @OnClick(R.id.btnSeeMoreNewSongs)
     void seeMoreNewSongs() {
         Intent intent = new Intent(getContext(), SeeMoreSongsActivity.class);
+        intent.putExtra("songType", "newSongs");
         startActivity(intent);
     }
 
@@ -193,6 +182,14 @@ public class HomeFragment extends Fragment {
         if (callNewSongs != null) {
             callNewSongs.cancel();
             callNewSongs = null;
+        }
+        if (callFeatureSongs != null) {
+            callFeatureSongs.cancel();
+            callFeatureSongs = null;
+        }
+        if (callPopularSR != null) {
+            callPopularSR.cancel();
+            callPopularSR = null;
         }
     }
 

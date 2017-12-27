@@ -43,6 +43,31 @@
         android:text="79 score"
         app:layout_constraintStart_toEndOf="@+id/tvSizeOfFile"
         app:layout_constraintTop_toTopOf="@+id/tvSizeOfFile" />
+    <TextView
+        android:id="@+id/tvType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:text="video"
+        app:layout_constraintStart_toEndOf="@+id/tvScore"
+        app:layout_constraintTop_toTopOf="@+id/tvSizeOfFile" />
+
+    <ImageButton
+        android:id="@+id/btnRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete_white"
+        android:textColor="@android:color/white"
+        android:background="@drawable/btn_remove_red"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintRight_toLeftOf="@id/btnPost"
+        app:layout_constraintTop_toTopOf="@id/btnPost"
+        app:layout_constraintBottom_toBottomOf="@id/btnPost"/>
 
     <TextView
         android:id="@+id/btnPost"

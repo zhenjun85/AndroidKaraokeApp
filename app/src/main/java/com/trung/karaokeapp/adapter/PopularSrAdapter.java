@@ -1,6 +1,8 @@
 package com.trung.karaokeapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.Utils;
+import com.trung.karaokeapp.activity.SrDetailActivity;
+import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.network.AppURL;
 
@@ -37,15 +41,25 @@ public class PopularSrAdapter extends RecyclerView.Adapter<PopularSrAdapter.MyVi
 
     @Override
     public void onBindViewHolder(PopularSrAdapter.MyViewHolder holder, int position) {
-        SharedRecord sr = listSr.get(position);
+        final SharedRecord sr = listSr.get(position);
         holder.tvSongName.setText(sr.getKaraoke().getName());
         holder.tvNumView.setText(sr.getViewNo() + (sr.getViewNo() > 1 ? " views" : " view"));
         holder.tvAuthor.setText(sr.getUser().getName());
         holder.tvPostContent.setText(sr.getContent());
         holder.tvSharedAt.setText(Utils.recentTime(sr.getShared_at()));
+        holder.tvSrType.setText(sr.getType());
 
         String folderPath = sr.getKaraoke().getBeat().substring(0, sr.getKaraoke().getBeat().length() - 4);
         Glide.with(context).load( AppURL.baseUrlSongAndLyric + "/" + folderPath + "/" + sr.getKaraoke().getImage() ).into(holder.ivCoverSong);
+
+        holder.clSrItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, SrDetailActivity.class);
+                intent.putExtra("sharedrecord", new Gson().toJson(sr));
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -54,12 +68,9 @@ public class PopularSrAdapter extends RecyclerView.Adapter<PopularSrAdapter.MyVi
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSongName;
-        TextView tvNumView;
-        TextView tvAuthor;
-        TextView tvPostContent;
+        TextView tvSongName,tvNumView,tvAuthor,tvPostContent,tvSharedAt,tvSrType;
         ImageView ivCoverSong;
-        TextView tvSharedAt;
+        ConstraintLayout clSrItem;
 
         public MyViewHolder(View view) {
             super(view);
@@ -69,6 +80,8 @@ public class PopularSrAdapter extends RecyclerView.Adapter<PopularSrAdapter.MyVi
             tvPostContent = view.findViewById(R.id.tv_post_content);
             ivCoverSong = view.findViewById(R.id.iv_song_cover);
             tvSharedAt = view.findViewById(R.id.tv_shared_at);
+            clSrItem = view.findViewById(R.id.clSrItem);
+            tvSrType = view.findViewById(R.id.tvSrType);
         }
     }
 }

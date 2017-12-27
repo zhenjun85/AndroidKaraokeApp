@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.trung.karaokeapp.R;
-import com.google.android.gms.plus.PlusOneButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,7 @@ public class SongBookFragment extends Fragment {
 
         int searchImgId = android.support.v7.appcompat.R.id.search_button;
         ImageView v = (ImageView) searchView.findViewById(searchImgId);
-        v.setImageResource(R.drawable.ic_search_black_24dp);
+        v.setImageResource(R.drawable.ic_search);
         searchView.setQueryHint("Find the song");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

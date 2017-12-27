@@ -1,6 +1,7 @@
 package com.trung.karaokeapp.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.AppURL;
@@ -47,6 +48,8 @@ public class PostRecordActivity extends AppCompatActivity {
     ApiService service;
     private Call<ResponseBody> callUploadRecord;
     private KaraokeSong karaokeSong;
+    private boolean isVideo;
+    private Call<Integer> callAddSR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +63,10 @@ public class PostRecordActivity extends AppCompatActivity {
         toolbar.setTitle("Post");
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
 
-        //setup song for activity
+        //get from intent
+        isVideo = getIntent().getBooleanExtra("isVideo", false);
         karaokeSong = new Gson().fromJson(getIntent().getStringExtra("song"), KaraokeSong.class);
         String folderName = karaokeSong.getBeat().substring(0, karaokeSong.getBeat().length() - 4);
         Glide.with(getBaseContext()).load(AppURL.baseUrlSongAndLyric + "/" + folderName + "/" + karaokeSong.getImage()).into(ivCoverSong);
@@ -72,7 +76,7 @@ public class PostRecordActivity extends AppCompatActivity {
     @OnClick(R.id.btnPost)
     void post() {
         //upload file to server
-        String filePath = getIntent().getStringExtra("record");
+        final String filePath = getIntent().getStringExtra("record");
         Log.d(TAG, "filePath:" + filePath);
 
         final File file = new File(filePath);
@@ -81,6 +85,8 @@ public class PostRecordActivity extends AppCompatActivity {
         RequestBody description = RequestBody.create(MultipartBody.FORM, "upload record");
         callUploadRecord = service.postAudioRecord(body, description);
         callUploadRecord.enqueue(new Callback<ResponseBody>() {
+
+
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.d(TAG, response.toString());
@@ -93,13 +99,22 @@ public class PostRecordActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Call<Integer> callAddSR = service.addSharedRecord(karaokeSong.getId(), "audio", fileName, score, etContent.getText().toString());
+                callAddSR = service.addSharedRecord(karaokeSong.getId(), isVideo ? "video" : "audio" , fileName, score, etContent.getText().toString());
                 callAddSR.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         Log.d(TAG, requestBody.toString());
                         if ( response.body() == 1) {
                             Toast.makeText(getBaseContext(), "Post completely!", Toast.LENGTH_SHORT).show();
+                            //delete file record
+                            File delFile = new File(filePath);
+                            if (delFile.exists()){
+                                delFile.delete();
+                            }
+                            //return post to update recycler view
+                            Intent data = new Intent();
+                            data.putExtra("position", getIntent().getIntExtra("position", -1));
+                            setResult(RESULT_OK, data);
                             finish();
                         }else {
                             Toast.makeText(getBaseContext(), "Post fail!", Toast.LENGTH_SHORT).show();
@@ -117,6 +132,20 @@ public class PostRecordActivity extends AppCompatActivity {
                 Log.d(TAG, "fail" + t.getMessage());
             }
         });
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (callAddSR != null){
+            callAddSR.cancel();
+            callAddSR = null;
+        }
+        if (callUploadRecord != null) {
+            callUploadRecord.cancel();
+            callUploadRecord = null;
+        }
 
     }
 

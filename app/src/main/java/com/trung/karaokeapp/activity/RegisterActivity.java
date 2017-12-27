@@ -8,8 +8,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.TokenManager;
-import com.trung.karaokeapp.Utils;
+import com.trung.karaokeapp.network.TokenManager;
+import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.AccessToken;
 import com.trung.karaokeapp.entities.ApiError;
 import com.trung.karaokeapp.network.ApiService;

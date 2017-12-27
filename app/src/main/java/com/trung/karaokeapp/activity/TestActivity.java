@@ -11,6 +11,8 @@ import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,8 +36,13 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         ButterKnife.bind(this);
-        service = RetrofitBuilder.createService(ApiService.class);
+        List<Integer> list = new ArrayList<>();
+        list.add(4);
+        list.add(2);
 
 
+        list.remove(new Integer(4));
+        Log.d(TAG, list.size() + "");
+        Log.d(TAG, list.get(0) + "");
     }
 }

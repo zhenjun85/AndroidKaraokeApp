@@ -50,6 +50,7 @@ public class NewSongsAdapter extends RecyclerView.Adapter<NewSongsAdapter.MyView
             public void onClick(View view) {
                 Intent intent = new Intent(context, SongDetailActivity.class);
                 intent.putExtra("song", new Gson().toJson(song));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

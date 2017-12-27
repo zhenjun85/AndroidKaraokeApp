@@ -13,46 +13,42 @@
             android:layout_height="?attr/actionBarSize"/>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <!-- Label -->
+    <RelativeLayout
+        android:background="#efeef1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_height="40dp"
+        android:layout_marginTop="?attr/actionBarSize">
+        <TextView
+            android:id="@+id/tvSortText"
+            android:padding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Most Recent"
+            android:textSize="18sp" />
 
-            <!--//Label group-->
-            <RelativeLayout
-                android:background="#efeef1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:padding="8dp"
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="false"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="Most Recent"
-                    android:textSize="18sp" />
+        <TextView
+            android:id="@+id/btnSort"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/btn_ripple_item"
+            android:drawableStart="@drawable/ic_expand_more_black_18dp"
+            android:padding="8dp"
+            android:textSize="18sp"
+            android:layout_alignParentEnd="true"
+            android:text="Sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
-                <TextView
-                    android:clickable="true"
-                    android:background="@drawable/btn_ripple"
-                    android:drawableLeft="@drawable/ic_expand_more_black_18dp"
-                    android:padding="8dp"
-                    android:textSize="18sp"
-                    android:layout_alignParentEnd="true"
-                    android:text="Sort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvNotification"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-            <include layout="@layout/item_rv_notification"/>
-            <include layout="@layout/item_rv_notification"/>
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/mn_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search"
         android:title="Search"
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView" />
     <item
-        android:id="@+id/mn_add_playlist"
+        android:id="@+id/mn_add_song_to_playlist"
         android:icon="@android:drawable/star_big_off"
         android:title="Add to playlist"
         app:showAsAction="always" />

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.Utils;
+import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.RecordUserKs;
 import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.viewmodel.RecentViewModel;
@@ -51,7 +51,7 @@ public class RecentSongsAdapter extends RecyclerView.Adapter<RecentSongsAdapter.
         holder.tvTimeAgo.setText(Utils.recentTime( recordUserKs.getUpdated_at() ));
 
         if (Utils.dayBetweenPastAndNow(recordUserKs.getSong().getCreatedAt()) <= 7) {
-            Drawable leftDrawable = context.getResources().getDrawable(R.drawable.ic_stars_black_24dp);
+            Drawable leftDrawable = context.getResources().getDrawable(R.drawable.ic_stars_black);
             holder.tvSinger.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null);
         }
         else {

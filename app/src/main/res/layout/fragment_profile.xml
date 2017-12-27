@@ -23,7 +23,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/btn_ripple_20"
-                    android:src="@drawable/ic_settings_black_24dp"
+                    android:src="@drawable/ic_settings"
                     android:layout_alignParentEnd="true"/>
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -32,19 +32,18 @@
                     android:layout_height="80dp"
                     android:layout_marginTop="60dp"
                     android:layout_marginStart="16dp"
-                    android:layout_alignParentStart="true"
-                    android:src="@drawable/ic_like"/>
+                    android:layout_alignParentStart="true"/>
 
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="200dp"
-                    android:background="@drawable/btn_ripple"
+                    android:background="@drawable/btn_ripple_item"
                     android:clickable="true"
                     android:drawablePadding="8dp"
                     android:drawableEnd="@drawable/ic_edit_black_24dp"
-                    android:text="Trung Thong"
+                    android:text="User"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -60,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="01/02/1995"
+                    android:text="01/01/1995"
                     android:textColor="#E6ffffff"
                     android:layout_marginStart="8dp"
                     android:layout_below="@id/tvName"
@@ -72,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:text="Oôi là cung Bảo Bình Oôi là cung Bảo Bình Oôi là cung Bảo BìnhOôi là cung Bảo BìnhOôi là cung Bảo Bình"
+                    android:text="123"
                     android:textColor="#c8ffffff"
                     android:textSize="16sp"
                     android:layout_marginStart="8dp"
@@ -95,7 +94,7 @@
                     <RelativeLayout
                         android:id="@+id/btn_playlist_open"
                         android:clickable="true"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:layout_width="96dp"
                         android:layout_height="match_parent">
 
@@ -117,7 +116,7 @@
                     <RelativeLayout
                         android:id="@+id/btn_local_song_open"
                         android:clickable="true"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:layout_width="96dp"
                         android:layout_height="match_parent">
 
@@ -139,7 +138,7 @@
                     <RelativeLayout
                         android:id="@+id/btn_duet_open"
                         android:clickable="true"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:layout_width="96dp"
                         android:layout_height="match_parent">
 
@@ -161,7 +160,7 @@
                     <RelativeLayout
                         android:id="@+id/btn_photo_open"
                         android:clickable="true"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:layout_width="96dp"
                         android:layout_height="match_parent">
 
@@ -185,7 +184,7 @@
                         android:id="@+id/btn_friend_open"
                         android:layout_width="96dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/btn_ripple"
+                        android:background="@drawable/btn_ripple_item"
                         android:clickable="true">
 
                         <ImageView
