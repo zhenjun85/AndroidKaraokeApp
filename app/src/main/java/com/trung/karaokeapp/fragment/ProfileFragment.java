@@ -15,16 +15,14 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.activity.SeeMoreRecenRecordActivity;
-import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.activity.DuetManageActivity;
 import com.trung.karaokeapp.activity.FriendActivity;
 import com.trung.karaokeapp.activity.LocalSongsActivity;
 import com.trung.karaokeapp.activity.PhotoManageActivity;
 import com.trung.karaokeapp.activity.PlaylistActivity;
+import com.trung.karaokeapp.activity.SeeMoreRecenRecordActivity;
 import com.trung.karaokeapp.activity.SettingsActivity;
 import com.trung.karaokeapp.adapter.PopularSrAdapter;
 import com.trung.karaokeapp.entities.SharedRecord;
@@ -32,6 +30,7 @@ import com.trung.karaokeapp.entities.User;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
 
 import java.util.List;
 

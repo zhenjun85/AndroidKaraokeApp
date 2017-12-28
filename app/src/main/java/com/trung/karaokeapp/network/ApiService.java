@@ -51,7 +51,7 @@ public interface ApiService {
 
     @POST("songs/all")
     @FormUrlEncoded
-    Call<List<KaraokeSong>> getAllSongs( @Field("sort") String sortType, @Field("genre") String genre );
+    Call<List<KaraokeSong>> getAllSongs(@Field("sort") String sortType, @Field("genre") String genre);
 
     @GET("songs/new/0")
     Call<List<KaraokeSong>> getAllNewSongs();
@@ -89,7 +89,14 @@ public interface ApiService {
 
     @POST("songs/report")
     @FormUrlEncoded
-    Call<Integer> reportKaraokeSong( @Field("kar_id") int ksId, @Field("subject") int subject );
+    Call<Integer> reportKaraokeSong(@Field("kar_id") int ksId, @Field("subject") int subject);
+
+    @GET("songs/recommend/{num}")
+    Call<List<KaraokeSong>> getRecommend(@Path("num") int num);
+
+    @POST("songs/notlike")
+    @FormUrlEncoded
+    Call<Integer> sendNotLike(@Field("ks+id") int ksId);
 
     @GET("user")
     Call<User> getUser();
@@ -105,7 +112,7 @@ public interface ApiService {
     //new Shared Record
     @POST("record/add")
     @FormUrlEncoded
-    Call<Integer> addSharedRecord( @Field("ksid") int ksid, @Field("type") String type, @Field("path") String path, @Field("score") int score ,@Field("content") String content );
+    Call<Integer> addSharedRecord(@Field("ksid") int ksid, @Field("type") String type, @Field("path") String path, @Field("score") int score, @Field("content") String content);
 
     @GET("record/popular/{num}")
     Call<List<SharedRecord>> getPopularSr(@Path("num") int num);
@@ -123,15 +130,19 @@ public interface ApiService {
     Call<CommentTb> commentRecord(@Field("sr_id") int srid, @Field("content") String content);
 
     @GET("record/{id}/comments")
-    Call<List<CommentTb>> getCommentsOfSr( @Path("id") int srid );
+    Call<List<CommentTb>> getCommentsOfSr(@Path("id") int srid);
 
     @POST("record/report")
     @FormUrlEncoded
-    Call<Integer> reportSharedRecord( @Field("sr_id") int srId, @Field("subject") int subject );
+    Call<Integer> reportSharedRecord(@Field("sr_id") int srId, @Field("subject") int subject);
 
     @POST("record/upview")
     @FormUrlEncoded
     Call<Integer> upViewSr(@Field("sr_id") int srid);
+
+    @GET("record/{id}")
+    Call<SharedRecord> getSr(@Path("id") int id);
+
 
     @GET("songs/{id}/rank")
     Call<List<SharedRecord>> getUserRank(@Path("id") int id);
@@ -165,21 +176,21 @@ public interface ApiService {
 
     //FEED
     @GET("newfeed/{num}")
-    Call<List<SharedRecord>> getNewFeeds( @Path("num") int num );
+    Call<List<SharedRecord>> getNewFeeds(@Path("num") int num);
 
     @GET("relation/{other_id}")
-    Call<Integer> getRelationStatus(@Path("other_id") int otherId );
+    Call<Integer> getRelationStatus(@Path("other_id") int otherId);
 
     @POST("relation/request")
     @FormUrlEncoded
-    Call<Integer> requestFriend( @Field("other_id") int otherId );
+    Call<Integer> requestFriend(@Field("other_id") int otherId);
 
     @GET("relation/all")
     Call<List<RelationTb>> getAllRelation();
 
 
     @GET("announcement/{num}/{sort}")
-    Call<List<ToAnnUser>> getAnnouncement(@Path( "num" ) int num, @Path("sort") String sort);
+    Call<List<ToAnnUser>> getAnnouncement(@Path("num") int num, @Path("sort") String sort);
 
     //Upload file
     @Multipart
@@ -188,11 +199,11 @@ public interface ApiService {
 
     @POST("photo/add")
     @FormUrlEncoded
-    Call<PhotoTb> addPhoto( @Field("file_name") String fileName );
+    Call<PhotoTb> addPhoto(@Field("file_name") String fileName);
 
     @POST("photo/delete")
     @FormUrlEncoded
-    Call<Integer> delPhoto( @Field("photo_id") int photoId );
+    Call<Integer> delPhoto(@Field("photo_id") int photoId);
 
     @GET("photo/all")
     Call<List<PhotoTb>> getAllPhotos();
@@ -200,7 +211,7 @@ public interface ApiService {
 
     @POST("user/update-avatar")
     @FormUrlEncoded
-    Call<Integer> updateUserAvatar( @Field("path") String path );
+    Call<Integer> updateUserAvatar(@Field("path") String path);
 
 
 

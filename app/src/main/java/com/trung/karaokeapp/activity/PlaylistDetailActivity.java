@@ -2,14 +2,13 @@ package com.trung.karaokeapp.activity;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -17,7 +16,6 @@ import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.adapter.PlaylistDetailAdatper;
 import com.trung.karaokeapp.entities.HasPlaylistKs;
-import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.entities.Playlist;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;

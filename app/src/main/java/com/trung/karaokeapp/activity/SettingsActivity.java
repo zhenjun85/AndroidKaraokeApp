@@ -1,17 +1,11 @@
 package com.trung.karaokeapp.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.fragment.SettingFragment;
-
-import butterknife.BindView;
 
 /**
  * Created by avc on 12/13/2017.

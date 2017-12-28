@@ -14,9 +14,9 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.activity.SrDetailActivity;
-import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.network.AppURL;
+import com.trung.karaokeapp.utils.Utils;
 
 import java.util.List;
 

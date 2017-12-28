@@ -3,6 +3,7 @@ package com.trung.karaokeapp.activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,18 +11,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.network.AppURL;
-import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.fragment.FeedFragment;
 import com.trung.karaokeapp.fragment.HomeFragment;
 import com.trung.karaokeapp.fragment.NotificationFragment;
 import com.trung.karaokeapp.fragment.ProfileFragment;
 import com.trung.karaokeapp.fragment.SongBookFragment;
+import com.trung.karaokeapp.network.AppURL;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.viewmodel.MainActivityViewModel;
 
 import java.io.File;

@@ -4,49 +4,67 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.entities.KaraokeSong;
+import com.trung.karaokeapp.network.ApiService;
+import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class RecommendedSongFragment extends Fragment {
-
-    public RecommendedSongFragment() {
-
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_song_book_recommend, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-      /*  if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }*/
-    }
+    private static final String TAG = "RecommendedSongFragment";
+    private TokenManager tokenManager;
+    private ApiService service;
+    @BindView(R.id.rvRecommend) RecyclerView rvRecommend;
+    private Call<List<KaraokeSong>> callGetRecommend;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_song_book_recommend, container, false);
+        ButterKnife.bind(this, view);
+        tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE));
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+
+        callGetRecommend = service.getRecommend(10);
+        callGetRecommend.enqueue(new Callback<List<KaraokeSong>>() {
+            @Override
+            public void onResponse(Call<List<KaraokeSong>> call, Response<List<KaraokeSong>> response) {
+                Log.d(TAG, response.toString());
+                List<KaraokeSong> karaokeSongList = response.body();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<KaraokeSong>> call, Throwable t) {
+                Log.d(TAG, t.getMessage());
+            }
+        });
+
+        return view;
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-//        mListener = null;
+    public void onStop() {
+        super.onStop();
+        if (callGetRecommend != null){
+            callGetRecommend.cancel();
+            callGetRecommend = null;
+        }
     }
-
 }

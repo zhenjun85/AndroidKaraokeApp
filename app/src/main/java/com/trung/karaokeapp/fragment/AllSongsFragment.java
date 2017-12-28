@@ -16,12 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.adapter.AllSongsAdapter;
 import com.trung.karaokeapp.entities.Genre;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.viewmodel.AllSongViewModel;
 
 import java.util.List;

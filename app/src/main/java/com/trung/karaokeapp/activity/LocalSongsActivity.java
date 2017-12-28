@@ -3,28 +3,26 @@ package com.trung.karaokeapp.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.adapter.LocalSongsAdapter;
-import com.trung.karaokeapp.utils.AppBaseCode;
 import com.trung.karaokeapp.entities.LocalRecord;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
+import com.trung.karaokeapp.utils.AppBaseCode;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 import butterknife.BindView;

@@ -25,9 +25,6 @@ import android.widget.VideoView;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.appclass.LyricFile;
-import com.trung.karaokeapp.network.TokenManager;
-import com.trung.karaokeapp.utils.MediaDecoder;
-import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.libffmpeg.ExecuteBinaryResponseHandler;
 import com.trung.karaokeapp.libffmpeg.FFmpeg;
@@ -36,6 +33,9 @@ import com.trung.karaokeapp.libffmpeg.exceptions.FFmpegCommandAlreadyRunningExce
 import com.trung.karaokeapp.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
+import com.trung.karaokeapp.utils.MediaDecoder;
+import com.trung.karaokeapp.utils.Utils;
 
 import org.jtransforms.fft.DoubleFFT_1D;
 
@@ -174,10 +174,10 @@ public class ReplayRecordActivity extends AppCompatActivity {
         }
         //endregion
 
-        //score
+        /*//score
         if (true) {
             new MediaDecodeAudio(this, record, lyric ).execute();
-        }
+        }*/
     }
 
     public class MediaDecodeAudio extends AsyncTask<Void, Double, Void> {

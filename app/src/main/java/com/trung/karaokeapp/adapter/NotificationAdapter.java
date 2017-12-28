@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.entities.Announcement;
 import com.trung.karaokeapp.entities.ToAnnUser;
 
 import java.util.List;

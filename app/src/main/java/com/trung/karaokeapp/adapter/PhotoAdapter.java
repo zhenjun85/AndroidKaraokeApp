@@ -2,15 +2,12 @@ package com.trung.karaokeapp.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
@@ -19,12 +16,7 @@ import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.viewmodel.PhotoViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by avc on 12/27/2017.

@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,19 +19,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.entities.HasPlaylistKs;
-import com.trung.karaokeapp.entities.Playlist;
-import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.adapter.RankingAdapter;
+import com.trung.karaokeapp.entities.HasPlaylistKs;
 import com.trung.karaokeapp.entities.KaraokeSong;
+import com.trung.karaokeapp.entities.Playlist;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
 
 import java.util.List;
 

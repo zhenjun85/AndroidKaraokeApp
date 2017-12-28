@@ -1,8 +1,8 @@
 package com.trung.karaokeapp.activity;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -46,7 +46,7 @@ public class FriendActivity extends AppCompatActivity {
             public void onResponse(Call<List<RelationTb>> call, Response<List<RelationTb>> response) {
                 Log.d(TAG, response.toString());
                 List<RelationTb> tbList = response.body();
-                friendAdapter = new FriendAdapter(getApplicationContext(), tbList);
+                friendAdapter = new FriendAdapter(getApplicationContext(), tbList, service);
                 rvFriend.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 rvFriend.setAdapter(friendAdapter);
             }

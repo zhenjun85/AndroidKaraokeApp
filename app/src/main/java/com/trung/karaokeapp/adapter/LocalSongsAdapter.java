@@ -18,10 +18,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.activity.PostRecordActivity;
-import com.trung.karaokeapp.utils.AppBaseCode;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.entities.LocalRecord;
 import com.trung.karaokeapp.network.ApiService;
+import com.trung.karaokeapp.utils.AppBaseCode;
 
 import java.io.File;
 import java.text.DecimalFormat;

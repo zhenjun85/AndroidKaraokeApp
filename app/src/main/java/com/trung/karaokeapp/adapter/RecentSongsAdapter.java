@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
-import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.RecordUserKs;
 import com.trung.karaokeapp.network.AppURL;
+import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.viewmodel.RecentViewModel;
 
 import java.util.List;

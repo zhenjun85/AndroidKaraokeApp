@@ -17,39 +17,42 @@ import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.activity.SongDetailActivity;
 import com.trung.karaokeapp.entities.KaraokeSong;
+import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.AppURL;
 import com.trung.karaokeapp.utils.Utils;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
- * Created by avc on 12/14/2017.
+ * Created by trung on 12/29/2017.
  */
 
-public class AllSongsAdapter extends RecyclerView.Adapter<AllSongsAdapter.MyViewHolder> {
-    public List<KaraokeSong> getSongLists() {
-        return songLists;
-    }
+public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.MyViewHolder> {
+    private Context context;
+    private List<KaraokeSong> karaokeSongList;
+    private ApiService service;
 
-    private final List<KaraokeSong> songLists;
-    private final Context context;
-
-    public AllSongsAdapter(List<KaraokeSong> songLists, Context context) {
-        this.songLists = songLists;
+    public RecommendAdapter(Context context, List<KaraokeSong> karaokeSongList, ApiService service) {
         this.context = context;
+        this.karaokeSongList = karaokeSongList;
+        this.service = service;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_allsongs, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_rv_recommend, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final KaraokeSong song = songLists.get(position);
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
+        final KaraokeSong song = karaokeSongList.get(position);
         holder.tvSongName.setText(song.getName());
-        holder.tvPlayNo.setText(song.getViewNo() + ((song.getViewNo() < 2) ? " view" : " views"));
+        holder.tvNumViews.setText(song.getViewNo() + ((song.getViewNo() < 2) ? " view" : " views"));
         holder.tvSinger.setText(song.getArtist());
 
 
@@ -62,7 +65,7 @@ public class AllSongsAdapter extends RecyclerView.Adapter<AllSongsAdapter.MyView
         }
         //load cover image
         String folderPath = AppURL.baseUrlSongAndLyric + "/" + song.getLyric().substring(0, song.getLyric().length() - 4);
-        Glide.with(this.context).load( folderPath + "/" + song.getImage() ).into(holder.ivCover);
+        Glide.with(this.context).load( folderPath + "/" + song.getImage() ).into(holder.ivCoverSong);
 
         //listener
         holder.btnSing.setOnClickListener(new View.OnClickListener() {
@@ -76,24 +79,45 @@ public class AllSongsAdapter extends RecyclerView.Adapter<AllSongsAdapter.MyView
                 context.startActivity(intent);
             }
         });
+        holder.btnNotLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                karaokeSongList.remove(position);
+                notifyItemRemoved(position);
+                notifyDataSetChanged();
+                Call<Integer> callNotLike  = service.sendNotLike(song.getId());
+                callNotLike.enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        Log.d("", response.toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable t) {
+                        Log.d("dd", t.getMessage());
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return songLists.size();
+        return karaokeSongList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private ImageView ivCover;
-        private TextView tvSongName, tvSinger, tvPlayNo;
-        private Button btnSing;
+        ImageView ivCoverSong;
+        TextView tvSongName,tvSinger,tvNumViews, btnNotLike;
+        Button btnSing;
         public MyViewHolder(View itemView) {
             super(itemView);
-            ivCover = itemView.findViewById(R.id.ivCoverSong);
+            ivCoverSong = itemView.findViewById(R.id.ivCoverSong);
             tvSongName = itemView.findViewById(R.id.tvSongName);
             tvSinger = itemView.findViewById(R.id.tvSinger);
-            tvPlayNo = itemView.findViewById(R.id.tv_playno);
-            btnSing = itemView.findViewById(R.id.btn_sing);
+            tvNumViews = itemView.findViewById(R.id.tvNumViews);
+            btnNotLike = itemView.findViewById(R.id.btnNotLike);
+            btnSing = itemView.findViewById(R.id.btnSing);
         }
     }
 }

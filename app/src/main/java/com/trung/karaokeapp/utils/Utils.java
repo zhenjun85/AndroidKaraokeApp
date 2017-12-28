@@ -1,20 +1,14 @@
 package com.trung.karaokeapp.utils;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.util.Log;
-
-import com.trung.karaokeapp.entities.ApiError;
-import com.trung.karaokeapp.network.RetrofitBuilder;
 import com.trung.karaokeapp.appclass.Line;
 import com.trung.karaokeapp.appclass.LyricFile;
 import com.trung.karaokeapp.appclass.Note;
+import com.trung.karaokeapp.entities.ApiError;
+import com.trung.karaokeapp.network.RetrofitBuilder;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.text.ParseException;

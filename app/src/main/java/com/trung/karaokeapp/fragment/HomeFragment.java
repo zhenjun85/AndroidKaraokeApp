@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.activity.LoginActivity;
-import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.activity.SeeMorePopularSrActivity;
 import com.trung.karaokeapp.activity.SeeMoreSongsActivity;
 import com.trung.karaokeapp.adapter.FeatureSongsAdapter;
@@ -29,6 +28,7 @@ import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+import com.trung.karaokeapp.network.TokenManager;
 
 import java.util.List;
 

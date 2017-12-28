@@ -6,20 +6,16 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Color;
 import android.net.Uri;
-import android.provider.MediaStore;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -76,6 +72,7 @@ public class PhotoManageActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.titile_photo);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //rv
         callGetPhotos = service.getAllPhotos();
@@ -172,6 +169,9 @@ public class PhotoManageActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
             case R.id.mn_set_avatar:
                 String imagePath = photoAdapter.getPhotoTbList().get(photoViewModel.getPosSelect()).getPath();
                 Call<Integer> callUpdateAvatar = service.updateUserAvatar(imagePath);

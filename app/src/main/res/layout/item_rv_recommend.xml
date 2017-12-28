@@ -28,7 +28,7 @@
         android:layout_marginStart="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/ivCoverSong"
-        app:layout_constraintRight_toLeftOf="@id/btn_sing"/>
+        app:layout_constraintRight_toLeftOf="@id/btnSing"/>
 
     <TextView
         android:id="@+id/tvSinger"
@@ -44,11 +44,11 @@
         android:layout_marginTop="2dp"
         app:layout_constraintTop_toBottomOf="@id/tvSongName"
         app:layout_constraintLeft_toLeftOf="@id/tvSongName"
-        app:layout_constraintRight_toLeftOf="@id/btn_sing"/>
+        app:layout_constraintRight_toLeftOf="@id/btnSing"/>
 
     <TextView
-        android:id="@+id/tv_playno"
-        android:layout_width="0dp"
+        android:id="@+id/tvNumViews"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="100 views"
         android:textColor="#B3135f96"
@@ -58,41 +58,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/tvSinger"
         app:layout_constraintRight_toLeftOf="@id/btn_sing"/>
-    <LinearLayout
-        android:id="@+id/btn_sing"
+    <Button
+        android:id="@+id/btnSing"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/btn_round_4dp_blue"
+        android:background="@drawable/btn_sing_allsongs"
+        android:text="Sing"
+        android:textColor="#135f96"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <TextView
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:background="@drawable/btn_ripple_item"
-            android:text="Sing"
-            android:textStyle="bold"
-            android:textColor="#135f96" />
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/btn_not_like"
+        android:id="@+id/btnNotLike"
         android:clickable="true"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Not Like"
-        android:textAlignment="center"
         android:textColor="@android:color/darker_gray"
         android:background="@drawable/btn_ripple_item"
         android:layout_marginTop="4dp"
-        app:layout_constraintLeft_toLeftOf="@id/btn_sing"
-        app:layout_constraintRight_toRightOf="@id/btn_sing"
-        app:layout_constraintTop_toBottomOf="@id/btn_sing"
-        android:focusable="true" />
+        android:focusable="true"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintTop_toBottomOf="@id/btnSing"
+        app:layout_constraintLeft_toLeftOf="@id/btnSing"
+        app:layout_constraintRight_toRightOf="@id/btnSing"/>
 </android.support.constraint.ConstraintLayout>

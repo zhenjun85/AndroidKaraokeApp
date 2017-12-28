@@ -8,12 +8,12 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -60,7 +60,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.POST;
 
 public class SrDetailActivity extends AppCompatActivity {
     private static final String TAG = "SharedRecordDetailActiv";
@@ -148,6 +147,21 @@ public class SrDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean) {
+                    Call<SharedRecord> callGetSr = service.getSr(sharedRecord.getId());
+                    callGetSr.enqueue(new Callback<SharedRecord>() {
+                        @Override
+                        public void onResponse(Call<SharedRecord> call, Response<SharedRecord> response) {
+                            sharedRecord = response.body();
+                            tvNumViews.setText( sharedRecord.getViewNo() );
+                            tvNumLikes.setText( sharedRecord.getNumLikes() );
+                        }
+
+                        @Override
+                        public void onFailure(Call<SharedRecord> call, Throwable t) {
+
+                        }
+                    });
+
                     //UpView
                     callUpViewSr = service.upViewSr(sharedRecord.getId());
                     callUpViewSr.enqueue(new Callback<Integer>() {
