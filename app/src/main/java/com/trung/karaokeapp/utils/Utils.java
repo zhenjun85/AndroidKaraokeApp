@@ -266,10 +266,9 @@ public class Utils {
     public static int convertPitchToScore(float pitch, int sampleNote) {
         pitch = pitch < 0 ? 0 : pitch;
         int n = (int)Math.round(Math.log(pitch / 440)/Math.log(2) * 12);
-        int score = 10 - Math.abs(Math.abs(9-n) - Math.abs(9-sampleNote));
-        if (score <= 10 && score >= 0)
-            return score;
-        return 0;
+        int detal = Math.abs(n - sampleNote);
+        int score = (detal < 3)? 10: (detal < 5)? 9: (detal < 13)? 13 - detal: 0;
+        return score;
     }
 
 }

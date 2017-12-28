@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.activity.SeeMoreRecenRecordActivity;
 import com.trung.karaokeapp.network.TokenManager;
 import com.trung.karaokeapp.activity.DuetManageActivity;
 import com.trung.karaokeapp.activity.FriendActivity;
@@ -146,6 +147,12 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.btn_friend_open)
     void openFriends() {
         onMyClick(R.id.btn_friend_open);
+    }
+
+    @OnClick(R.id.tvMoreRecentRecord)
+    void moreRecentRecord() {
+        Intent intent = new Intent(getContext(), SeeMoreRecenRecordActivity.class);
+        startActivity(intent);
     }
 
     public void onMyClick(int btnId) {

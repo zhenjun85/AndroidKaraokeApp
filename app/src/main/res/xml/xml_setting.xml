@@ -11,12 +11,19 @@
             android:summary="Select theme what you want"
             android:title="Choose theme" />
     </PreferenceCategory>
-    <PreferenceCategory
+    <!--<PreferenceCategory
         android:layout="@layout/preferences_category"
         android:title="Change Server">
         <EditTextPreference
             android:key="key_base_ip"
             android:title="Change IP address" />
+    </PreferenceCategory>-->
+    <PreferenceCategory
+        android:layout="@layout/preferences_category"
+        android:title="Action">
+        <EditTextPreference
+            android:key="key_base_ip"
+            android:title="Send feedback" />
     </PreferenceCategory>
     <PreferenceCategory
         android:layout="@layout/preferences_category"

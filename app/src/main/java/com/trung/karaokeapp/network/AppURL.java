@@ -7,17 +7,17 @@ package com.trung.karaokeapp.network;
  */
 
 public class AppURL {
-    /*public static final String baseUrlSongAndLyric = "http://192.168.3.7:8000/store/songs";
+    public static final String baseUrlSongAndLyric = "http://192.168.3.7:8000/store/songs";
     public static final String baseUrlAudioRecord = "http://192.168.3.7:8000/storage/records";
     public static final String baseUrlPhotos = "http://192.168.3.7:8000/storage/photos";
     public static final String baseUrlApi = "http://192.168.3.7:8000/api";
-    public static final String baseUrl = "http://192.168.3.7:8000";*/
+    public static final String baseUrl = "http://192.168.3.7:8000";
 
-    public static final String baseUrlSongAndLyric = "http://192.168.43.5:8000/store/songs";
+    /*public static final String baseUrlSongAndLyric = "http://192.168.43.5:8000/store/songs";
     public static final String baseUrlAudioRecord = "http://192.168.43.5:8000/storage/records";
     public static final String baseUrlPhotos = "http://192.168.43.5:8000/storage/photos";
     public static final String baseUrlApi = "http://192.168.43.5:8000/api";
-    public static final String baseUrl = "http://192.168.43.5:8000";
+    public static final String baseUrl = "http://192.168.43.5:8000";*/
     //http://6220a0f3.ngrok.io/
 
     //on Device

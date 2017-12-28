@@ -75,7 +75,8 @@
         <activity android:name=".activity.PostRecordActivity" />
         <activity android:name=".activity.SeeMoreSongsActivity" />
         <activity android:name=".activity.SeeMorePopularSrActivity" />
-        <activity android:name=".activity.SrDetailActivity"></activity>
+        <activity android:name=".activity.SrDetailActivity" />
+        <activity android:name=".activity.SeeMoreRecenRecordActivity"></activity>
     </application>
 
 </manifest>

@@ -1,11 +1,13 @@
 package com.trung.karaokeapp.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +24,9 @@ import android.widget.VideoView;
 
 import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.appclass.LyricFile;
 import com.trung.karaokeapp.network.TokenManager;
+import com.trung.karaokeapp.utils.MediaDecoder;
 import com.trung.karaokeapp.utils.Utils;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.libffmpeg.ExecuteBinaryResponseHandler;
@@ -32,6 +36,8 @@ import com.trung.karaokeapp.libffmpeg.exceptions.FFmpegCommandAlreadyRunningExce
 import com.trung.karaokeapp.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;
+
+import org.jtransforms.fft.DoubleFFT_1D;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,21 +61,21 @@ public class ReplayRecordActivity extends AppCompatActivity {
     @BindView(R.id.btnPlay) ImageButton btnPlay;
     @BindView(R.id.seekBarSong) SeekBar seekBar;
     @BindView(R.id.videoView) VideoView videoView;
+    @BindView(R.id.tvScoreStatus) TextView tvScoreStatus;
 
     private String record;
     private String beat;
     private String lyric;
-    private KaraokeSong songKar;
+    private KaraokeSong karaokeSong;
     private MediaPlayer mediaPlayer;
     private MediaPlayer mediaPlayerForRecord;
-
     private FFmpeg ffmpeg;
     private String output;
     private boolean isVideo = false;
 
-
     TokenManager tokenManager;
     ApiService service;
+    private int scoreOfSong = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
 
         //get from Intent
         String songJson = getIntent().getStringExtra("song");
-        songKar = new Gson().fromJson(songJson, KaraokeSong.class);
+        karaokeSong = new Gson().fromJson(songJson, KaraokeSong.class);
         record = getIntent().getStringExtra("record");
         beat = getIntent().getStringExtra("beat");
         lyric = getIntent().getStringExtra("lyric");
@@ -96,10 +102,9 @@ public class ReplayRecordActivity extends AppCompatActivity {
         }else {
             //video
             isVideo = true;
-
         }
 
-        toolbar.setTitle(songKar.getName());
+        toolbar.setTitle(karaokeSong.getName());
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -109,8 +114,8 @@ public class ReplayRecordActivity extends AppCompatActivity {
         loadFFMpegBinary();
 
         //set SongDetail to activity
-        tvSongName.setText(songKar.getName());
-        tvGenre.setText(String.format("Genre: %s", songKar.getGenre()));
+        tvSongName.setText(karaokeSong.getName());
+        tvGenre.setText(String.format("Genre: %s", karaokeSong.getGenre()));
 
         //media
         mediaPlayer = new MediaPlayer();
@@ -169,6 +174,143 @@ public class ReplayRecordActivity extends AppCompatActivity {
         }
         //endregion
 
+        //score
+        if (true) {
+            new MediaDecodeAudio(this, record, lyric ).execute();
+        }
+    }
+
+    public class MediaDecodeAudio extends AsyncTask<Void, Double, Void> {
+        private Activity ctx;
+        private String rawRecordPath;
+        private String lyricPath;
+
+        private int blocksize = 1024;
+        private MediaDecoder mD;
+        private DoubleFFT_1D fft;
+
+        public MediaDecodeAudio (Activity ctx, String raw_record_path, String lyric) {
+            this.ctx = ctx;
+            this.rawRecordPath = raw_record_path;
+            this.lyricPath = lyric;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d(TAG, "start scoring");
+            tvScoreStatus.setText("Scoring...");
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            try {
+                mD = new MediaDecoder(rawRecordPath);
+                float[] samples = mD.readShortData();
+                boolean outIdxFlag = false;
+                double sroceSum = 0;
+                int numNote = 0;
+
+                LyricFile lyricFile = Utils.openSongFile(lyricPath);
+
+                for(int num=0; num<lyricFile.allLines.size(); num++)
+                {
+                    for(int j=0; j < lyricFile.allLines.get(num).notes.size(); j++) {
+                        if(lyricFile.allLines.get(num).notes.get(j).noteType == 0) {
+                            continue;
+                        }
+                        int a = lyricFile.allLines.get(num).notes.get(j).start;
+                        int b = lyricFile.allLines.get(num).notes.get(j).length;
+                        int p = lyricFile.allLines.get(num).notes.get(j).pitch;
+
+                        int loopNum = b * 8 / 1024;
+                        float[] noteFreq = new float[loopNum];
+
+                        for (int temp = 0; temp < loopNum; temp++) {
+                            double[] audioDataDoubles = new double[blocksize * 2];
+                            double[] re = new double[blocksize];
+                            double[] im = new double[blocksize];
+                            double[] magnitude = new double[blocksize];
+
+                            fft = new DoubleFFT_1D(blocksize);
+
+                            for (int i = 0; i < blocksize; i++) {//if s[i] out range
+                                if(samples.length < i) {
+                                    outIdxFlag = true;
+                                    break;
+                                }
+                                audioDataDoubles[2 * i] = (double) samples[a + temp * 1024 + i];
+                                audioDataDoubles[(2 * i) + 1] = 0.0;
+                            }
+
+                            if(outIdxFlag) {
+                                break;
+                            }
+
+                            fft.complexForward(audioDataDoubles);
+
+                            for (int i = 0; i < blocksize; i++) {
+                                // real is stored in first part of array
+                                re[i] = audioDataDoubles[i * 2];
+                                // imaginary is stored in the sequential part
+                                im[i] = audioDataDoubles[(i * 2) + 1];
+                                // magnitude is calculated by the square root of (imaginary^2 + real^2)
+                                magnitude[i] = Math.sqrt((re[i] * re[i]) + (im[i] * im[i]));
+                            }
+
+                            double max_magnitude = Double.NEGATIVE_INFINITY;
+                            int max_index = -1;
+                            // Get the largest magnitude peak
+                            for (int i = 0; i < blocksize; i++) {
+                                if (max_magnitude < magnitude[i]) {
+                                    max_magnitude = magnitude[i];
+                                    max_index = i;
+                                }
+                            }
+
+                            noteFreq[temp] = (8000 * max_index) / blocksize;
+                        }
+
+                        if(outIdxFlag) {
+                            break;
+                        }
+
+                        //Calc score
+                        float sum = 0;
+                        for (int it = 0; it < loopNum; it++) {
+                            sum += noteFreq[it];
+                        }
+                        float avgFreq = sum / loopNum;
+                        double score = Utils.convertPitchToScore(avgFreq, p);
+
+                        sroceSum += score*lyricFile.allLines.get(num).notes.get(j).noteType;
+                        numNote += lyricFile.allLines.get(num).notes.get(j).noteType;
+                    }
+
+                    if(outIdxFlag) {
+                        break;
+                    }
+                }
+//            System.out.println("***************************");
+//            System.out.println((numNote < 1)? 0:sroceSum / numNote);
+                publishProgress((numNote < 1) ? 0 : (sroceSum / numNote));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onProgressUpdate(Double... frequencies) {
+            super.onProgressUpdate(frequencies);
+            double f = frequencies[0];
+            tvScoreStatus.setText("Score: " + (int) Math.round(f));
+            scoreOfSong = (int) Math.round(f);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.d(TAG, "stop scoring");
+        }
     }
 
     @OnClick(R.id.btnPlay)
@@ -227,7 +369,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
         String duration = tvDuration.getText().toString().replace(":", "-");
         if (!isVideo) {
             //audio 3gp
-            output = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp3";
+            output = record.substring(0, record.length() - 4) + "_" + scoreOfSong + "_" + duration +  ".mp3";
             comm = new ArrayList<>();
             comm.add("-y");
             comm.add("-i");
@@ -245,7 +387,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
             comm.add(output);
         }else {
             //video mp4
-            output = record.substring(0, record.length() - 4) + "_10_" + duration +  ".mp4";
+            output = record.substring(0, record.length() - 4) + "_" + scoreOfSong + "_" + duration +  ".mp4";
             comm = new ArrayList<>();
             comm.add("-y");
             comm.add("-i");
@@ -299,7 +441,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
     }
     private void execFFmpegBinary(final String[] command, final AlertDialog alertDialog, final boolean isPost) {
         //update viewNo
-        Call<Boolean> call = service.upViewKs(songKar.getId());
+        Call<Boolean> call = service.upViewKs(karaokeSong.getId());
         call.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {

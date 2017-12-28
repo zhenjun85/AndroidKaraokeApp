@@ -8,6 +8,7 @@ import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.entities.PhotoTb;
 import com.trung.karaokeapp.entities.Playlist;
 import com.trung.karaokeapp.entities.RecordUserKs;
+import com.trung.karaokeapp.entities.RelationTb;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.entities.ToAnnUser;
 import com.trung.karaokeapp.entities.User;
@@ -172,6 +173,10 @@ public interface ApiService {
     @POST("relation/request")
     @FormUrlEncoded
     Call<Integer> requestFriend( @Field("other_id") int otherId );
+
+    @GET("relation/all")
+    Call<List<RelationTb>> getAllRelation();
+
 
     @GET("announcement/{num}/{sort}")
     Call<List<ToAnnUser>> getAnnouncement(@Path( "num" ) int num, @Path("sort") String sort);

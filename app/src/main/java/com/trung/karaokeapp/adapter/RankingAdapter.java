@@ -41,8 +41,10 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.MyViewHo
         holder.tvNumView.setText(sharedRecord.getViewNo() + (sharedRecord.getViewNo() < 2 ? " view" : " views"));
         holder.tvIndexUser.setText((position + 1) + "");
 
-        if (sharedRecord.getUser().getAvatar() == null || sharedRecord.getUser().getAvatar() == "") {
-            Glide.with(context).load(AppURL.baseUrl + "/store/avatar.png").into(holder.ivAvatar);
+        if (sharedRecord.getUser().getAvatar() == null) {
+            holder.ivAvatar.setImageDrawable( context.getDrawable(R.drawable.ic_face_black_48px) );
+        }else {
+            Glide.with(context).load( AppURL.baseUrlPhotos + "/" + sharedRecord.getUser().getAvatar() ).into(holder.ivAvatar);
         }
     }
 
