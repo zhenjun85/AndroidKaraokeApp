@@ -1,6 +1,9 @@
 package com.trung.karaokeapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,11 +11,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.activity.SongDetailActivity;
 import com.trung.karaokeapp.entities.HasPlaylistKs;
 import com.trung.karaokeapp.entities.Playlist;
 import com.trung.karaokeapp.network.ApiService;
@@ -76,6 +82,16 @@ public class PlaylistDetailAdatper extends RecyclerView.Adapter<PlaylistDetailAd
                 popupMenu.show();
             }
         });
+
+        holder.btnOpenKs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, SongDetailActivity.class);
+                intent.putExtra("song", new Gson().toJson(hasPlaylistKs.getKaraokeSong()));
+                context.startActivity(intent);
+                ((Activity)context).finish();
+            }
+        });
     }
 
     private void deleteSongInPlaylist(HasPlaylistKs hasPlaylistKs, final int position) {
@@ -113,13 +129,14 @@ public class PlaylistDetailAdatper extends RecyclerView.Adapter<PlaylistDetailAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvIndex, tvSongName, tvSinger;
         ImageButton btnMorePl;
-
+        ConstraintLayout btnOpenKs;
         public MyViewHolder(View itemView) {
             super(itemView);
             tvIndex = itemView.findViewById(R.id.tvIndex);
             tvSongName = itemView.findViewById(R.id.tvSongName);
             tvSinger = itemView.findViewById(R.id.tvSinger);
             btnMorePl = itemView.findViewById(R.id.btnMorePl);
+            btnOpenKs = itemView.findViewById(R.id.btnOpenKs);
         }
     }
 }

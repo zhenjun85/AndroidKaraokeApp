@@ -142,7 +142,8 @@
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
                         android:id="@+id/btn_duet_open"
-                        android:clickable="true"
+                        android:clickable="false"
+                        android:visibility="invisible"
                         android:background="@drawable/btn_ripple_item"
                         android:layout_weight="1"
                         android:layout_width="match_parent"

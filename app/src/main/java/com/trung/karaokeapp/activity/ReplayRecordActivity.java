@@ -174,10 +174,10 @@ public class ReplayRecordActivity extends AppCompatActivity {
         }
         //endregion
 
-        /*//score
+        //score
         if (true) {
             new MediaDecodeAudio(this, record, lyric ).execute();
-        }*/
+        }
     }
 
     public class MediaDecodeAudio extends AsyncTask<Void, Double, Void> {
@@ -185,7 +185,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
         private String rawRecordPath;
         private String lyricPath;
 
-        private int blocksize = 1024;
+        private int blocksize = 2048;
         private MediaDecoder mD;
         private DoubleFFT_1D fft;
 
@@ -223,23 +223,31 @@ public class ReplayRecordActivity extends AppCompatActivity {
                         int b = lyricFile.allLines.get(num).notes.get(j).length;
                         int p = lyricFile.allLines.get(num).notes.get(j).pitch;
 
-                        int loopNum = b * 8 / 1024;
+                        int loopNum = (int) Math.ceil(b * 8 / 2048.0);
                         float[] noteFreq = new float[loopNum];
 
                         for (int temp = 0; temp < loopNum; temp++) {
                             double[] audioDataDoubles = new double[blocksize * 2];
                             double[] re = new double[blocksize];
                             double[] im = new double[blocksize];
-                            double[] magnitude = new double[blocksize];
+                            double[] magnitude = new double[blocksize / 2];
 
-                            fft = new DoubleFFT_1D(blocksize);
-
-                            for (int i = 0; i < blocksize; i++) {//if s[i] out range
-                                if(samples.length < i) {
+                            //  Hann
+                            double[] preRealData = new double[blocksize];
+                            double PI = 3.14159265359;
+                            for (int i = 0; i < blocksize; i++) {
+                                if(samples.length <= a * 8 + temp * 2048 + i) { //FIXME:
                                     outIdxFlag = true;
                                     break;
                                 }
-                                audioDataDoubles[2 * i] = (double) samples[a + temp * 1024 + i];
+                                double multiplier = 0.5 * (1 - Math.cos(2*PI*i/(blocksize-1)));
+                                preRealData[i] = multiplier * samples[a * 8 + temp * 2048 + i];
+                            }
+
+                            fft = new DoubleFFT_1D(blocksize);
+
+                            for (int i = 0; i < blocksize; i++) {
+                                audioDataDoubles[2 * i] = preRealData[i];
                                 audioDataDoubles[(2 * i) + 1] = 0.0;
                             }
 
@@ -249,19 +257,17 @@ public class ReplayRecordActivity extends AppCompatActivity {
 
                             fft.complexForward(audioDataDoubles);
 
-                            for (int i = 0; i < blocksize; i++) {
-                                // real is stored in first part of array
-                                re[i] = audioDataDoubles[i * 2];
-                                // imaginary is stored in the sequential part
-                                im[i] = audioDataDoubles[(i * 2) + 1];
-                                // magnitude is calculated by the square root of (imaginary^2 + real^2)
-                                magnitude[i] = Math.sqrt((re[i] * re[i]) + (im[i] * im[i]));
+                            for (int i = 0; i < blocksize / 2; i++) {
+                                double R = audioDataDoubles[2 * i];
+                                double I = audioDataDoubles[2 * i + 1];
+
+                                magnitude[i] = Math.sqrt(I*I + R*R);
                             }
 
                             double max_magnitude = Double.NEGATIVE_INFINITY;
                             int max_index = -1;
                             // Get the largest magnitude peak
-                            for (int i = 0; i < blocksize; i++) {
+                            for (int i = 0; i < blocksize / 2; i++) {
                                 if (max_magnitude < magnitude[i]) {
                                     max_magnitude = magnitude[i];
                                     max_index = i;
@@ -281,7 +287,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
                             sum += noteFreq[it];
                         }
                         float avgFreq = sum / loopNum;
-                        double score = Utils.convertPitchToScore(avgFreq, p);
+                        double score = (avgFreq > 0)?Utils.convertPitchToScore(avgFreq, p): 0;
 
                         sroceSum += score*lyricFile.allLines.get(num).notes.get(j).noteType;
                         numNote += lyricFile.allLines.get(num).notes.get(j).noteType;
@@ -291,8 +297,6 @@ public class ReplayRecordActivity extends AppCompatActivity {
                         break;
                     }
                 }
-//            System.out.println("***************************");
-//            System.out.println((numNote < 1)? 0:sroceSum / numNote);
                 publishProgress((numNote < 1) ? 0 : (sroceSum / numNote));
             } catch (Exception e){
                 e.printStackTrace();
@@ -303,8 +307,8 @@ public class ReplayRecordActivity extends AppCompatActivity {
         protected void onProgressUpdate(Double... frequencies) {
             super.onProgressUpdate(frequencies);
             double f = frequencies[0];
-            tvScoreStatus.setText("Score: " + (int) Math.round(f));
-            scoreOfSong = (int) Math.round(f);
+            tvScoreStatus.setText("Score: " + (int) Math.round(f * 10));
+            scoreOfSong = (int) Math.round(f * 10);
         }
 
         @Override

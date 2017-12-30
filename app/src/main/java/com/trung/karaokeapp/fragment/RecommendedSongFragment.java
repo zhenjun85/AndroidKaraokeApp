@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.adapter.RecommendAdapter;
 import com.trung.karaokeapp.entities.KaraokeSong;
 import com.trung.karaokeapp.network.ApiService;
 import com.trung.karaokeapp.network.RetrofitBuilder;
@@ -33,7 +35,7 @@ public class RecommendedSongFragment extends Fragment {
     private Call<List<KaraokeSong>> callGetRecommend;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_song_book_recommend, container, false);
         ButterKnife.bind(this, view);
@@ -46,7 +48,9 @@ public class RecommendedSongFragment extends Fragment {
             public void onResponse(Call<List<KaraokeSong>> call, Response<List<KaraokeSong>> response) {
                 Log.d(TAG, response.toString());
                 List<KaraokeSong> karaokeSongList = response.body();
-
+                RecommendAdapter recommendAdapter = new RecommendAdapter(getContext(), karaokeSongList, service);
+                rvRecommend.setLayoutManager(new LinearLayoutManager(getContext()));
+                rvRecommend.setAdapter(recommendAdapter);
 
             }
 

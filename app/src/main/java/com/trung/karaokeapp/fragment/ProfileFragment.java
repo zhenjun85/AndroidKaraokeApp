@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.btnSettings) ImageButton btnSettings;
     @BindView(R.id.btn_playlist_open) RelativeLayout btnPlaylist;
     @BindView(R.id.btn_local_song_open) RelativeLayout btnLocalSong;
-    @BindView(R.id.btn_duet_open) RelativeLayout btnDuet;
+    /*@BindView(R.id.btn_duet_open) RelativeLayout btnDuet;*/
     @BindView(R.id.btn_photo_open) RelativeLayout btnPhoto;
     @BindView(R.id.btn_friend_open) RelativeLayout btnFriend;
 
@@ -135,10 +135,10 @@ public class ProfileFragment extends Fragment {
     void openLocalSongs() {
         onMyClick(R.id.btn_local_song_open);
     }
-    @OnClick(R.id.btn_duet_open)
+    /*@OnClick(R.id.btn_duet_open)
     void openDuets() {
         onMyClick(R.id.btn_duet_open);
-    }
+    }*/
     @OnClick(R.id.btn_photo_open)
     void openPhotos() {
         onMyClick(R.id.btn_photo_open);
@@ -163,9 +163,9 @@ public class ProfileFragment extends Fragment {
             case R.id.btn_local_song_open:
                 intent = new Intent(getContext(), LocalSongsActivity.class);
                 break;
-            case R.id.btn_duet_open:
+            /*case R.id.btn_duet_open:
                 intent = new Intent(getContext(), DuetManageActivity.class);
-                break;
+                break;*/
             case R.id.btn_photo_open:
                 intent = new Intent(getContext(), PhotoManageActivity.class);
                 break;

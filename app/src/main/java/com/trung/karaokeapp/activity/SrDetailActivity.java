@@ -106,6 +106,8 @@ public class SrDetailActivity extends AppCompatActivity {
     private int checkedItem;
     private Call<Integer> callReportSharedSong;
     private Call<Integer> callUpViewSr;
+    private Call<SharedRecord> callGetSr;
+    private DownloadFileFromURL downloadFileFromURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,28 +142,30 @@ public class SrDetailActivity extends AppCompatActivity {
         }
         videoView.setVisibility(View.GONE);
         //download txt file
-        new DownloadFileFromURL().execute(urlLyric, urlRecord);
+        downloadFileFromURL = new DownloadFileFromURL();
+        downloadFileFromURL.execute(urlLyric, urlRecord);
 
         //region observer
         srViewModel.getIsReady().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean) {
-                    Call<SharedRecord> callGetSr = service.getSr(sharedRecord.getId());
+
+                    callGetSr = service.getSr(sharedRecord.getId());
                     callGetSr.enqueue(new Callback<SharedRecord>() {
                         @Override
                         public void onResponse(Call<SharedRecord> call, Response<SharedRecord> response) {
+                            Log.d(TAG, response.toString());
                             sharedRecord = response.body();
-                            tvNumViews.setText( sharedRecord.getViewNo() );
-                            tvNumLikes.setText( sharedRecord.getNumLikes() );
+                            tvNumLikes.setText( sharedRecord.getNumLikes() + "" );
+                            tvNumViews.setText( sharedRecord.getViewNo() + "" );
                         }
 
                         @Override
                         public void onFailure(Call<SharedRecord> call, Throwable t) {
-
+                            Log.d(TAG, t.getMessage());
                         }
                     });
-
                     //UpView
                     callUpViewSr = service.upViewSr(sharedRecord.getId());
                     callUpViewSr.enqueue(new Callback<Integer>() {
@@ -660,12 +664,6 @@ public class SrDetailActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    /*   private Call<List<CommentTb>> callGetComments;
-        private Call<Integer> callGetIsLike;
-        private Call<Integer> callLikeRecord;
-        private Call<CommentTb> callComment;
-        private Call<Integer> callRequestFriend;
-        private Call<Integer> callGetRelation;*/
     @Override
     protected void onStop() {
         super.onStop();
@@ -702,5 +700,13 @@ public class SrDetailActivity extends AppCompatActivity {
             callUpViewSr = null;
         }
 
+        if (callGetSr != null) {
+            callGetSr.cancel();
+            callGetSr = null;
+        }
+        if (downloadFileFromURL != null) {
+            downloadFileFromURL.cancel(true);
+            downloadFileFromURL = null;
+        }
     }
 }

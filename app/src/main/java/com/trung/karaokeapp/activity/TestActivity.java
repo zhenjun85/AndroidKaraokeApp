@@ -25,13 +25,9 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         ButterKnife.bind(this);
-        List<Integer> list = new ArrayList<>();
-        list.add(4);
-        list.add(2);
 
-
-        list.remove(new Integer(4));
-        Log.d(TAG, list.size() + "");
-        Log.d(TAG, list.get(0) + "");
+        String txt =
+                "INSERT INTO `record_user_ks` (`user_id`, `kar_id`, `created_at`, `updated_at`, `count`) VALUES ('6', '1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1');";
+        Log.d(TAG, txt  );
     }
 }

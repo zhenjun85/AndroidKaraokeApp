@@ -2,14 +2,17 @@ package com.trung.karaokeapp.utils;
 
 import android.annotation.SuppressLint;
 import android.media.MediaCodec;
+import android.media.MediaCodec.BufferInfo;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Created by quangthanh on 12/25/2017.
+ * Created by quangthanh on 11/29/2017.
  */
 
 public class MediaDecoder {
@@ -28,7 +31,9 @@ public class MediaDecoder {
     private byte[] y = null;
 
     public MediaDecoder(String inputFilename) throws IOException {
-        extractor.setDataSource(inputFilename);
+        FileInputStream inputStream = new FileInputStream(inputFilename);
+        FileDescriptor fd = inputStream.getFD();
+        extractor.setDataSource(fd);
 
         // Select the first audio track we find.
         int numTracks = extractor.getTrackCount();
@@ -38,8 +43,10 @@ public class MediaDecoder {
             if (mime.startsWith("audio/")) {
                 extractor.selectTrack(i);
                 decoder = MediaCodec.createDecoderByType(mime);
+
                 decoder.configure(format, null, null, 0);
-                inputFormat = format;
+                inputFormat = format; //FIXME: Not use
+                System.out.println(mime);
                 break;
             }
         }
@@ -58,7 +65,7 @@ public class MediaDecoder {
     // The caller should copy the data out of the ByteBuffer before calling this again
     // or else it may get overwritten.
     @SuppressLint("WrongConstant")
-    private byte[] readData(MediaCodec.BufferInfo info) {
+    private byte[] readData(BufferInfo info) {
         if (decoder == null)
             return null;
 
@@ -93,10 +100,16 @@ public class MediaDecoder {
                     decoder.stop();
                     decoder.release();
                     decoder = null;
+                    extractor.release();
+                    extractor = null;
                     return x;
                 }
 
                 ByteBuffer t = outputBuffers[outputBufferIndex];
+
+//                byte[] k = new byte[t.remaining()];
+//                t.get(k);
+//                System.out.println(Arrays.toString(k));
 
                 if(x == null){
                     x = new byte[t.remaining()];
@@ -133,7 +146,7 @@ public class MediaDecoder {
     // Read the raw audio data in 16-bit format
     // Returns null on EOF
     public float[] readShortData() {
-        MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
+        BufferInfo info = new BufferInfo();
         byte[] data = readData(info);
 
         if (data == null)
@@ -142,13 +155,14 @@ public class MediaDecoder {
         int samplesRead = data.length/2;
         float[] samples = new float[samplesRead];
 
-        for (int i = 0, s = 0; i < samplesRead; ) {
+        for (int i = 0, s = 0; s < samplesRead; ) {
             int sample = 0;
 
             sample |= data[i++] & 0xFF; // (reverse these two lines
             sample |= data[i++] << 8; // if the format is big endian)
 
-            samples[s++] = sample / 32768.0f;
+
+            samples[s++] = sample;
         }
 
         return samples;
