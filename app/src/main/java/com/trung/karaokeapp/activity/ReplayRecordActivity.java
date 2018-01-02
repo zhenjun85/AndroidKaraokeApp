@@ -111,7 +111,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
 
         // //Load FFmpeg Library
         ffmpeg = FFmpeg.getInstance(this);
-        loadFFMpegBinary();
+
 
         //set SongDetail to activity
         tvSongName.setText(karaokeSong.getName());
@@ -414,6 +414,8 @@ public class ReplayRecordActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+        loadFFMpegBinary();
+
         String[] command = getCommand();
         execFFmpegBinary(command, alertDialog, true);
     }
@@ -423,9 +425,10 @@ public class ReplayRecordActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Start merging beat and mic files...");
         builder.setCancelable(false);
-
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        loadFFMpegBinary();
 
         String[] command = getCommand();
         execFFmpegBinary(command, alertDialog, false);
