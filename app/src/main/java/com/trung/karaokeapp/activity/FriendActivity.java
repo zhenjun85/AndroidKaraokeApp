@@ -1,12 +1,14 @@
 package com.trung.karaokeapp.activity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.adapter.FriendAdapter;
@@ -25,7 +27,8 @@ import retrofit2.Response;
 
 public class FriendActivity extends AppCompatActivity {
     private static final String TAG = "FriendActivity";
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.rvFriend) RecyclerView rvFriend;
     private TokenManager tokenManager;
     private ApiService service;
@@ -38,6 +41,11 @@ public class FriendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend);
         ButterKnife.bind(this);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("Friend");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", Context.MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
         callAllRelation = service.getAllRelation();
@@ -56,6 +64,18 @@ public class FriendActivity extends AppCompatActivity {
                 Log.d(TAG, t.getMessage());
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:break;
+        }
+
+        return true;
     }
 
     @Override
