@@ -102,6 +102,11 @@ public interface ApiService {
     @FormUrlEncoded
     Call<List<KaraokeSong>> searchKs(@Field("name") String name);
 
+    @POST("users/search")
+    @FormUrlEncoded
+    Call<List<User>> findUsers(@Field("name") String name);
+
+
     @GET("user")
     Call<User> getUser();
 
@@ -147,7 +152,6 @@ public interface ApiService {
     @GET("record/{id}")
     Call<SharedRecord> getSr(@Path("id") int id);
 
-
     @GET("songs/{id}/rank")
     Call<List<SharedRecord>> getUserRank(@Path("id") int id);
 
@@ -191,7 +195,6 @@ public interface ApiService {
 
     @GET("relation/all")
     Call<List<RelationTb>> getAllRelation();
-
 
     @GET("announcement/{num}/{sort}")
     Call<List<ToAnnUser>> getAnnouncement(@Path("num") int num, @Path("sort") String sort);

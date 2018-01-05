@@ -1,6 +1,7 @@
 package com.trung.karaokeapp.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.activity.FindFriendsActivity;
 import com.trung.karaokeapp.adapter.FeedAdapter;
 import com.trung.karaokeapp.entities.SharedRecord;
 import com.trung.karaokeapp.network.ApiService;
@@ -48,6 +51,18 @@ public class FeedFragment extends Fragment {
         toolbar.inflateMenu(R.menu.menu_feed);
         toolbar.setTitle(R.string.titile_feed);
         toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.mn_findfriends:
+                        startActivity(new Intent(getContext(), FindFriendsActivity.class));
+                        break;
+                    default:break;
+                }
+                return true;
+            }
+        });
 
         tokenManager = TokenManager.getInstance(getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
@@ -68,7 +83,6 @@ public class FeedFragment extends Fragment {
                 FeedAdapter feedAdapter = new FeedAdapter(getContext(), recordList, service);
                 rvNewFeeds.setLayoutManager( new LinearLayoutManager(getContext()));
                 rvNewFeeds.setAdapter(feedAdapter);
-
             }
 
             @Override
