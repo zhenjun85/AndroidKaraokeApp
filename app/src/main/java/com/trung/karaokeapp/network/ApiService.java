@@ -96,7 +96,11 @@ public interface ApiService {
 
     @POST("songs/notlike")
     @FormUrlEncoded
-    Call<Integer> sendNotLike(@Field("ks+id") int ksId);
+    Call<Integer> sendNotLike(@Field("ks_id") int ksId);
+
+    @POST("songs/search")
+    @FormUrlEncoded
+    Call<List<KaraokeSong>> searchKs(@Field("name") String name);
 
     @GET("user")
     Call<User> getUser();

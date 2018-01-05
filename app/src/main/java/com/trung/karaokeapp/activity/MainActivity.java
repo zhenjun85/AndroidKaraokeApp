@@ -30,7 +30,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-implements SongBookFragment.OnFragmentInteractionListener
 {
     @BindView(R.id.navigation) BottomNavigationView bottomNavigation;
 
@@ -134,8 +133,4 @@ implements SongBookFragment.OnFragmentInteractionListener
         }
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        Log.d("uri,", uri.toString());
-    }
 }

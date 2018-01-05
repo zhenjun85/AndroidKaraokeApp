@@ -130,7 +130,7 @@ public class RecordActivity extends AppCompatActivity {
         //media
         mediaPlayer = new MediaPlayer();
         mediaAudioRecorder = new MediaRecorder();
-        mediaAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaAudioRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         mediaAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
 

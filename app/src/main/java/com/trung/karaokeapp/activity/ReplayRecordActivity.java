@@ -287,7 +287,7 @@ public class ReplayRecordActivity extends AppCompatActivity {
                             sum += noteFreq[it];
                         }
                         float avgFreq = sum / loopNum;
-                        double score = (avgFreq > 0)?Utils.convertPitchToScore(avgFreq, p): 0;
+                        double score = (avgFreq > 101)?Utils.convertPitchToScore(avgFreq + 400, p): 0;
 
                         sroceSum += score*lyricFile.allLines.get(num).notes.get(j).noteType;
                         numNote += lyricFile.allLines.get(num).notes.get(j).noteType;

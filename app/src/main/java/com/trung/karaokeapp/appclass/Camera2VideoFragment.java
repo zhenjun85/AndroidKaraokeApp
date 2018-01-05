@@ -525,7 +525,7 @@ public class Camera2VideoFragment extends Fragment {
         if (null == activity) {
             return;
         }
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {

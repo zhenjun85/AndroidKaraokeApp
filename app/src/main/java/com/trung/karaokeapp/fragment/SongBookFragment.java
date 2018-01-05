@@ -1,6 +1,7 @@
 package com.trung.karaokeapp.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,23 +15,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.trung.karaokeapp.R;
+import com.trung.karaokeapp.activity.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class SongBookFragment extends Fragment {
-
-    private OnFragmentInteractionListener mListener;
-    public SongBookFragment() {
-        // Required empty public constructor
-    }
-
+    private static final String TAG = "SongBookFragment";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,25 +50,16 @@ public class SongBookFragment extends Fragment {
         toolbar.setTitle(R.string.title_songbook);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.inflateMenu(R.menu.menu_home);
-
-        Menu menu = toolbar.getMenu();
-
-        final SearchView searchView = (SearchView) menu.findItem(R.id.mn_search).getActionView();
-
-        int searchImgId = android.support.v7.appcompat.R.id.search_button;
-        ImageView v = (ImageView) searchView.findViewById(searchImgId);
-        v.setImageResource(R.drawable.ic_search);
-        searchView.setQueryHint("Find the song");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.d("searchclick", "1");
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.mn_search:
+                        Intent intent = new Intent(getContext(), SearchActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
             }
         });
     }
@@ -110,40 +99,6 @@ public class SongBookFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 }

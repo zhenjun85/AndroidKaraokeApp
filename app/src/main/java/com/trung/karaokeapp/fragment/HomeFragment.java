@@ -14,11 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.trung.karaokeapp.R;
 import com.trung.karaokeapp.activity.LoginActivity;
+import com.trung.karaokeapp.activity.SearchActivity;
 import com.trung.karaokeapp.activity.SeeMorePopularSrActivity;
 import com.trung.karaokeapp.activity.SeeMoreSongsActivity;
 import com.trung.karaokeapp.adapter.FeatureSongsAdapter;
@@ -148,12 +150,20 @@ public class HomeFragment extends Fragment {
         toolbar.setTitle(R.string.title_home);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.inflateMenu(R.menu.menu_home);
-        Menu menu = toolbar.getMenu();
-        SearchView searchView = (SearchView) menu.findItem(R.id.mn_search).getActionView();
-       /* //change icon search view
-        int searchImgId = android.support.v7.appcompat.R.id.search_button; // I used the explicit layout ID of searchview's ImageView
-        ImageView v = (ImageView) searchView.findViewById(searchImgId);
-        v.setImageResource(R.drawable.ic_search);*/
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.mn_search:
+                        Intent intent = new Intent(getContext(), SearchActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:break;
+                }
+
+                return true;
+            }
+        });
     }
 
     @OnClick(R.id.btnSeeMorePopularSR)
